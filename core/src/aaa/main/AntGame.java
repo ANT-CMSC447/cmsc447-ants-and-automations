@@ -12,7 +12,7 @@ public class AntGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		img = new Texture("ant.png");
 	}
 
 	@Override
