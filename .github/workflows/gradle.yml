@@ -14,7 +14,8 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: write-all
+  contents: read
+  actions: write
 
 jobs:
   build:
