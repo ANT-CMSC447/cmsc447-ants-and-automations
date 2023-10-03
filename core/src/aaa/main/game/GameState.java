@@ -8,7 +8,7 @@ public class GameState {
 
     // current game variables which cannot be saved
     /// variables with defaults:
-
+    public boolean paused = false;
     /// other game variables:
 
     /// save game:
