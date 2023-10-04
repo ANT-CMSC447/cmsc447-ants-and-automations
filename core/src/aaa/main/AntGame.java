@@ -47,6 +47,6 @@ public class AntGame extends Game {
 	public void quit() {
 		this.pause();
 		this.dispose();
-		System.exit(0);
+		Gdx.app.exit();
 	}
 }
