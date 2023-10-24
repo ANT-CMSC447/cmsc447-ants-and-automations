@@ -22,10 +22,10 @@ public class CameraInputProcessor implements InputProcessor {
         //Camera zoom controls
         if (keycode == Input.Keys.MINUS && camera.zoom <= Constants.MAX_ZOOM) {
             //zoom out
-            camera.zoom += 0.02;
+            camera.zoom += 0.02f;
         } else if (keycode == Input.Keys.EQUALS && camera.zoom >= Constants.MIN_ZOOM) {
             //zoom in
-            camera.zoom -= 0.02;
+            camera.zoom -= 0.02f;
         }
 
         //move camera based on arrow keys (doesnt work when set to ortho)
