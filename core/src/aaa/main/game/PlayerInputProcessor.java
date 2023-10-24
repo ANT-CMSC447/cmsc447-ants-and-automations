@@ -5,8 +5,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.physics.box2d.Body;
 
 public class PlayerInputProcessor implements InputProcessor {
-    private float horizontalVelocity = 0;
-    private float verticalVelocity = 0;
+    private float horizontalVelocity;
+    private float verticalVelocity;
 
     private Body player;
     public PlayerInputProcessor(Body player) {
