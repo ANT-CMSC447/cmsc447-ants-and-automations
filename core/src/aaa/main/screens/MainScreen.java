@@ -1,7 +1,9 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
+import aaa.main.game.PlayerInputProcessor;
 import aaa.main.stages.PauseMenu;
+import aaa.main.game.CameraInputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -25,7 +27,6 @@ import static aaa.main.util.Constants.BORDER_HEIGHT;
 import static aaa.main.util.Constants.SCREEN_WIDTH;
 import static aaa.main.util.Constants.SCREEN_HEIGHT;
 
-
 public class MainScreen extends ScreenAdapter {
     private final AntGame game;
     private final PauseMenu pauseMenu;
@@ -39,9 +40,10 @@ public class MainScreen extends ScreenAdapter {
     private World world;
     private Body player,borderUP, borderDOWN, borderLEFT, borderRIGHT;
     private final float SCALE = 2.0f;
-
-
+    CameraInputProcessor cameraInputProcessor;
+    PlayerInputProcessor playerInputProcessor;
     public MainScreen(final AntGame game) {
+
         this.game = game;
         stage = new Stage();
 
@@ -50,11 +52,16 @@ public class MainScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCREEN_WIDTH / SCALE , SCREEN_HEIGHT / SCALE);
 
+        Gdx.input.setInputProcessor(cameraInputProcessor);
+        this.cameraInputProcessor = new CameraInputProcessor(camera);
+
         //World/debug renderer initialization
         world = new World(new Vector2(0, 0), false);
         b2dr = new Box2DDebugRenderer();
 
         player = createBox(0,0,32,32,false);
+
+        playerInputProcessor = new PlayerInputProcessor(player);
 
         //World border definition
         borderUP = createBox(0, (float) BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
@@ -67,7 +74,7 @@ public class MainScreen extends ScreenAdapter {
         labelStyle.font = game.font;
         Label mainText = new Label("Main Screen", labelStyle);
         mainText.setPosition(450f, 400f);
-        
+
         stage.addActor(mainText);
 
         stage.addListener(new InputListener() {
@@ -79,7 +86,6 @@ public class MainScreen extends ScreenAdapter {
                 return true;
             }
         });
-
         pauseMenu = new PauseMenu(game);
     }
 
@@ -149,65 +155,29 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void inputUpdate(float delta) {
-        //There are 3 main ways of using the camera,
-        //1. movement based on x,y position rather than physics (can cause clipping)
-        //2. movement based on physics with momentum
-        //3. movement based on physics without momentum
 
-        final int CameraChoice = 3;
+        //if = is pressed, use action from cameraInputProcessor
+        if (Gdx.input.isKeyPressed(Input.Keys.EQUALS) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.EQUALS)) {
+            cameraInputProcessor.keyDown(Input.Keys.EQUALS);
+        }
+        //if - is pressed, use action from cameraInputProcessor
+        if (Gdx.input.isKeyPressed(Input.Keys.MINUS) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.MINUS)) {
+            cameraInputProcessor.keyDown(Input.Keys.MINUS);
+        }
 
-        if (CameraChoice == 1) {
-            //Movement based on x,y position rather than physics (can cause clipping)
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) {
-                player.setTransform(player.getPosition().x + 5 * delta, player.getPosition().y, 0);
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
-                player.setTransform(player.getPosition().x - 5 * delta, player.getPosition().y, 0);
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W)) {
-                player.setTransform(player.getPosition().x, player.getPosition().y - 5 * delta, 0);
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S)) {
-                player.setTransform(player.getPosition().x, player.getPosition().y + 5 * delta, 0);
-            }
-        } else if (CameraChoice == 2) {
-            //Movement based on physics with momentum
-            int horizontalForce = 0;
-            int verticalForce = 0;
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) {
-                horizontalForce += 1;
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
-                horizontalForce -= 1;
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W)) {
-                verticalForce -= 1;
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S)) {
-                verticalForce += 1;
-            }
-            player.applyForceToCenter(horizontalForce * 5, verticalForce * 5, true);
-        } else if (CameraChoice == 3) {
-            //Movement based on physics without momentum
-            float horizontalVelocity = 0;
-            float verticalVelocity = 0;
-
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
-                verticalVelocity = 5;
-            } else if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
-                verticalVelocity = -5;
-            }
-
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
-                horizontalVelocity = -5;
-            } else if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
-                horizontalVelocity = 5;
-            }
-            player.setLinearVelocity(horizontalVelocity, verticalVelocity);
+        //Player inputs
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
+            playerInputProcessor.keyDown(Input.Keys.LEFT);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
+            playerInputProcessor.keyDown(Input.Keys.RIGHT);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
+            playerInputProcessor.keyDown(Input.Keys.UP);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
+            playerInputProcessor.keyDown(Input.Keys.DOWN);
+        } else {
+            playerInputProcessor.resetVelocity();
         }
     }
-
-    //currently keeps the camera centred at all times on the player
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
         position.x = player.getPosition().x * PPM;
