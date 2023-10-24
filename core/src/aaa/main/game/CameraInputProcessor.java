@@ -29,6 +29,7 @@ public class CameraInputProcessor implements InputProcessor {
         }
 
         //move camera based on arrow keys (doesnt work when set to ortho)
+        //test msg
         /*
         if (keycode == Input.Keys.LEFT) {
             //move left
