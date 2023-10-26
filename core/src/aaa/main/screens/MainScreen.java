@@ -69,13 +69,13 @@ public class MainScreen extends ScreenAdapter {
         borderLEFT = createBox((float) -BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
         borderRIGHT = createBox((float) BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.fontColor = Color.BLUE;
-        labelStyle.font = game.font;
-        Label mainText = new Label("Main Screen", labelStyle);
-        mainText.setPosition(450f, 400f);
-
-        stage.addActor(mainText);
+//        Label.LabelStyle labelStyle = new Label.LabelStyle();
+//        labelStyle.fontColor = Color.BLUE;
+//        labelStyle.font = game.font;
+//        Label mainText = new Label("Main Screen", labelStyle);
+//        mainText.setPosition(450f, 400f);
+//
+//        stage.addActor(mainText);
 
         stage.addListener(new InputListener() {
             @Override
@@ -105,7 +105,7 @@ public class MainScreen extends ScreenAdapter {
         b2dr.render(world, camera.combined.scl(PPM));
 
         if (game.gameState.paused && !pauseOpened) {
-            Gdx.input.setInputProcessor(pauseMenu.getStage());
+            pauseMenu.setInput();
             pauseOpened = true;
         } else if (!game.gameState.paused && pauseOpened) {
             Gdx.input.setInputProcessor(stage);
@@ -114,7 +114,7 @@ public class MainScreen extends ScreenAdapter {
         game.batch.begin();
         stage.draw();
         if (game.gameState.paused) {
-            this.pauseMenu.getStage().draw();
+            this.pauseMenu.draw(delta);
         }
         game.batch.end();
     }
@@ -144,6 +144,7 @@ public class MainScreen extends ScreenAdapter {
     public void dispose() {
         world.dispose();
         b2dr.dispose();
+        pauseMenu.dispose();
     }
 
     //Non tick based renderings

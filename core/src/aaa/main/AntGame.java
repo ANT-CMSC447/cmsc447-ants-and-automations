@@ -3,6 +3,7 @@ package aaa.main;
 import aaa.main.game.GameState;
 import aaa.main.screens.MainScreen;
 import aaa.main.screens.MenuScreen;
+import aaa.main.util.Constants;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,6 +32,8 @@ public class AntGame extends Game {
 		buttonStyle = new TextButton.TextButtonStyle();
 		buttonStyle.font = this.font;
 		buttonStyle.fontColor = Color.RED;
+		// set the screen size properly
+		Gdx.graphics.setWindowedMode(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 		setScreen(new MenuScreen(this));
 	}
 
