@@ -156,6 +156,10 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void inputUpdate(float delta) {
+        // do not process camera if paused
+        if (game.gameState.paused) {
+            return;
+        }
 
         //if = is pressed, use action from cameraInputProcessor
         if (Gdx.input.isKeyPressed(Input.Keys.EQUALS) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.EQUALS)) {
