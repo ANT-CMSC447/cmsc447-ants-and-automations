@@ -33,7 +33,7 @@ public class MainScreen extends ScreenAdapter {
     private OrthographicCamera cameraBox2D;
     private OrthographicCamera camera;
     private World world;
-    private Body player,borderUP, borderDOWN, borderLEFT, borderRIGHT;
+    private Body player ,borderUP, borderDOWN, borderLEFT, borderRIGHT, circle;
     private final float SCALE = 2.0f;
     CameraInputProcessor cameraInputProcessor;
     PlayerInputProcessor playerInputProcessor;
@@ -42,7 +42,6 @@ public class MainScreen extends ScreenAdapter {
 
         this.game = game;
         stage = new Stage();
-
 
         //Camera initilization
         camera = new OrthographicCamera();
