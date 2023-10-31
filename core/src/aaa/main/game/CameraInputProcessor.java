@@ -6,10 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
+import aaa.main.screens.MainScreen;
 
 
 public class CameraInputProcessor implements InputProcessor {
     private OrthographicCamera camera;
+    private float lastX, lastY;
 
     public CameraInputProcessor(OrthographicCamera camera) {
         this.camera = camera;
@@ -17,8 +20,6 @@ public class CameraInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-
-
         //Camera zoom controls
         if (keycode == Input.Keys.MINUS && camera.zoom <= Constants.MAX_ZOOM) {
             //zoom out
@@ -76,7 +77,22 @@ public class CameraInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        // convert the screen coordinates to world coordinates
+        Vector3 worldPos = camera.unproject(new Vector3(screenX, screenY, 0));
+
+        // get the change in position
+        float deltaX = worldPos.x - lastX;
+        float deltaY = worldPos.y - lastY;
+
+        // move the camera by the change in position
+        camera.translate(-deltaX, -deltaY);
+
+        // store the new position
+        lastX = worldPos.x;
+        lastY = worldPos.y;
+
+
+        return true;
     }
 
     @Override
