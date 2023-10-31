@@ -15,6 +15,8 @@ public final class Constants {
 
     public static final float MIN_ZOOM = 0.3f;
 
+    public static final float CAMERA_RETURN_SPEED = 0.1f;
+
     //Colony constants
     public static final float DEFAULT_HEALTH = 150;
     public static final float DEFAULT_RESOURCES = 25;
