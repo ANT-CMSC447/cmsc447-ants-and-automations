@@ -62,12 +62,20 @@ public class CameraInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        //save the position of the touch
+        Vector3 worldPos = camera.unproject(new Vector3(screenX, screenY, 0));
+        lastX = worldPos.x;
+        lastY = worldPos.y;
+        return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        //save the position of the touch
+        Vector3 worldPos = camera.unproject(new Vector3(screenX, screenY, 0));
+        lastX = worldPos.x;
+        lastY = worldPos.y;
+        return true;
     }
 
     @Override
@@ -80,18 +88,7 @@ public class CameraInputProcessor implements InputProcessor {
         // convert the screen coordinates to world coordinates
         Vector3 worldPos = camera.unproject(new Vector3(screenX, screenY, 0));
 
-        // get the change in position
-        float deltaX = worldPos.x - lastX;
-        float deltaY = worldPos.y - lastY;
-
-        // move the camera by the change in position
-        camera.translate(-deltaX, -deltaY);
-
-        // store the new position
-        lastX = worldPos.x;
-        lastY = worldPos.y;
-
-
+        camera.translate(lastX - worldPos.x, lastY - worldPos.y);
         return true;
     }
 
