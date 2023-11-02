@@ -48,4 +48,10 @@ public final class Constants {
     public static final int COLONY_WIDTH = 64;
     public static final int COLONY_HEIGHT = 64;
 
+
+    // map constants
+
+    public static final int MAP_RESOLUTION = 4;
+    public static final int MAP_WIDTH = 10;
+    public static final int MAP_HEIGHT = 10;
 }

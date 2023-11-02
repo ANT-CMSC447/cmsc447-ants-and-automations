@@ -1,4 +1,4 @@
-package aaa.main.game;
+package aaa.main.game.input;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
