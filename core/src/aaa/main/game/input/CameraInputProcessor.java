@@ -1,4 +1,4 @@
-package aaa.main.game;
+package aaa.main.game.input;
 
 import aaa.main.screens.MainScreen;
 import aaa.main.util.Constants;

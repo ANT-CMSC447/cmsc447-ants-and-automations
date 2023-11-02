@@ -2,14 +2,14 @@ package aaa.main.screens;
 
 import aaa.main.AntGame;
 import aaa.main.game.Colony;
-import aaa.main.game.PlayerInputProcessor;
+import aaa.main.game.input.PlayerInputProcessor;
+import aaa.main.game.map.MapManager;
 import aaa.main.stages.PauseMenu;
-import aaa.main.game.CameraInputProcessor;
+import aaa.main.game.input.CameraInputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,8 +21,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.ArrayList;
 
@@ -38,6 +36,8 @@ public class MainScreen extends ScreenAdapter {
     private boolean DEBUG = false;
     private Box2DDebugRenderer b2dr;
     private World world;
+
+    private MapManager mapManager;
     private Body player;
     private final float SCALE = 2.0f;
 
@@ -55,6 +55,8 @@ public class MainScreen extends ScreenAdapter {
         inputMultiplexer = new InputMultiplexer();
 
         this.game = game;
+        mapManager = new MapManager();
+        mapManager.setup();
         stage = new Stage();
 
         //Camera initilization
@@ -129,7 +131,7 @@ public class MainScreen extends ScreenAdapter {
         }
         game.batch.begin();
         stage.draw();
-
+        mapManager.render(camera);
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
         }
@@ -167,6 +169,7 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        mapManager.dispose();
         world.dispose();
         b2dr.dispose();
         pauseMenu.dispose();
