@@ -14,4 +14,11 @@ public final class Constants {
     public static final float MAX_ZOOM = 2.0f;
 
     public static final float MIN_ZOOM = 0.3f;
+
+    //Colony constants
+    public static final float DEFAULT_HEALTH = 150;
+    public static final float DEFAULT_RESOURCES = 25;
+    public static final int DEFAULT_ANTS = 2;
+
+    public static final int MAX_ANTS = 25;
 }
