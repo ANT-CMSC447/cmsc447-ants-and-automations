@@ -27,7 +27,10 @@ public class Colony {
         antsAlive=ants;
         colony=cBody;
         /*for (int i = 0; i < ants; i++) {
-            if
+            if (antsAlive < MAX_ANTS) {
+                antArray[i] = createAnt(colony.getPosition().x, colony.getPosition().y);
+                antsAlive++;
+            }
         }
         * */
     }
@@ -42,5 +45,10 @@ public class Colony {
     public float getHealth() {return health;}
 
     public void setHealth(float newHealth) {health=newHealth;}
+
+    //public Ant createAnt(float x, float y, String type) {}
+
+    //probably also an overloaded
+    //public Ant createAnt(float x, float y) {this(x,y,ANT)}
 
 }
