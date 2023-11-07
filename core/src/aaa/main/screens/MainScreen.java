@@ -1,6 +1,7 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
+import aaa.main.game.Colony;
 import aaa.main.game.PlayerInputProcessor;
 import aaa.main.stages.PauseMenu;
 import aaa.main.game.CameraInputProcessor;
@@ -42,6 +43,8 @@ public class MainScreen extends ScreenAdapter {
     private final float SCALE = 2.0f;
     CameraInputProcessor cameraInputProcessor;
     PlayerInputProcessor playerInputProcessor;
+
+    private Colony[] antColonies;
     public MainScreen(final AntGame game) {
 
         this.game = game;

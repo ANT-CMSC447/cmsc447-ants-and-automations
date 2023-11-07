@@ -1,7 +1,8 @@
 package aaa.main.game;
 
-import aaa.main.game.PlayerInputProcessor;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import static aaa.main.util.Constants.*;
@@ -16,6 +17,8 @@ public class Colony {
     private int antsAlive;
 
     //private Ant[MAX_ANTS] antArray;
+
+    private final Sprite sprite = new Sprite(new Texture(""));
 
     private Body colony;
 
@@ -45,6 +48,20 @@ public class Colony {
     public float getHealth() {return health;}
 
     public void setHealth(float newHealth) {health=newHealth;}
+
+    //Render method for drawing colony sprite
+    public void render(SpriteBatch batch) {
+        // First we position and rotate the sprite correctly
+        int posX = (int) colony.getPosition().x;
+        int posY = (int) colony.getPosition().y;
+        float rotation = (float) Math.toDegrees(colony.getAngle());
+        sprite.setPosition(posX, posY);
+        sprite.setRotation(rotation);
+
+        // Then we simply draw it as a normal sprite.
+        sprite.draw(batch);
+    }
+
 
     //public Ant createAnt(float x, float y, String type) {}
 
