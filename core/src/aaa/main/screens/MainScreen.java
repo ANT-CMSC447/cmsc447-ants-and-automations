@@ -1,7 +1,6 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
-import aaa.main.game.Colony;
 import aaa.main.game.PlayerInputProcessor;
 import aaa.main.stages.PauseMenu;
 import aaa.main.game.CameraInputProcessor;
@@ -31,7 +30,6 @@ public class MainScreen extends ScreenAdapter {
     private final Stage stage;
     private boolean pauseOpened = false;
 
-
     private boolean DEBUG = false;
     private Box2DDebugRenderer b2dr;
     private OrthographicCamera camera;
@@ -45,7 +43,6 @@ public class MainScreen extends ScreenAdapter {
     CameraInputProcessor cameraInputProcessor;
     PlayerInputProcessor playerInputProcessor;
     InputMultiplexer inputMultiplexer;
-    private final Colony[] antColonies = new Colony[GLOBAL_MAX_COLONY];
     public MainScreen(final AntGame game) {
         inputMultiplexer = new InputMultiplexer();
 
@@ -56,7 +53,7 @@ public class MainScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCREEN_WIDTH / SCALE , SCREEN_HEIGHT / SCALE);
 
-        Gdx.input.setInputProcessor(cameraInputProcessor);
+        //Gdx.input.setInputProcessor(cameraInputProcessor);
         this.cameraInputProcessor = new CameraInputProcessor(camera);
 
         //World/debug renderer initialization
@@ -182,18 +179,71 @@ public class MainScreen extends ScreenAdapter {
             cameraInputProcessor.keyDown(Input.Keys.MINUS);
         }
 
-        //Player inputs
+        //camera controlls with arrow keys
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
-            playerInputProcessor.keyDown(Input.Keys.LEFT);
+            cameraInputProcessor.keyDown(Input.Keys.LEFT);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
-            playerInputProcessor.keyDown(Input.Keys.RIGHT);
+            cameraInputProcessor.keyDown(Input.Keys.RIGHT);
         } else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
-            playerInputProcessor.keyDown(Input.Keys.UP);
+            cameraInputProcessor.keyDown(Input.Keys.UP);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
-            playerInputProcessor.keyDown(Input.Keys.DOWN);
-        } else {
-            playerInputProcessor.resetVelocity();
+            cameraInputProcessor.keyDown(Input.Keys.DOWN);
         }
+
+        //if 2 keys pressed at the same time, move diagonally (camera)
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            cameraInputProcessor.keyDown2(Input.Keys.LEFT, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+            cameraInputProcessor.keyDown2(Input.Keys.UP, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            cameraInputProcessor.keyDown2(Input.Keys.RIGHT, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+            cameraInputProcessor.keyDown2(Input.Keys.UP, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            cameraInputProcessor.keyDown2(Input.Keys.LEFT, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+            cameraInputProcessor.keyDown2(Input.Keys.DOWN, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            cameraInputProcessor.keyDown2(Input.Keys.RIGHT, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+            cameraInputProcessor.keyDown2(Input.Keys.DOWN, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+
+        //Player inputs
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) {
+            playerInputProcessor.keyDown(Input.Keys.A);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
+            playerInputProcessor.keyDown(Input.Keys.D);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W)) {
+            playerInputProcessor.keyDown(Input.Keys.W);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S)) {
+            playerInputProcessor.keyDown(Input.Keys.S);
+        }
+
+        //if 2 keys pressed at the same time, move diagonally (player)
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)) {
+           playerInputProcessor.keyDown2(Input.Keys.A, Input.Keys.W, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)) {
+            playerInputProcessor.keyDown2(Input.Keys.D, Input.Keys.W, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+            playerInputProcessor.keyDown2(Input.Keys.A, Input.Keys.S, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+            playerInputProcessor.keyDown2(Input.Keys.D, Input.Keys.S, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
+        }
+
+        //reset player velocity if no keys are pressed
+        if (!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) &&
+                !Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.S)) {
+            player.setLinearVelocity(0, 0);
+        }
+
+        //if touch dragged, use action from cameraInputProcessor
+//        if (Gdx.input.isTouched()) {
+//            cameraInputProcessor.touchDragged(Gdx.input.getX(), Gdx.input.getY(), 0);
+//        }
+
     }
     public void cameraUpdate(float delta) {
         if (cameraLock) {
