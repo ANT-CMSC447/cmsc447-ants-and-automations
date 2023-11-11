@@ -19,6 +19,8 @@ public final class Constants {
     public static final float DEFAULT_HEALTH = 150;
     public static final float DEFAULT_RESOURCES = 25;
     public static final int DEFAULT_ANTS = 2;
-
     public static final int MAX_ANTS = 25;
+    public static final int GLOBAL_MAX_COLONY = 5;
+
+    public static final String COLONY_TEXTURE_FILE = "col_nest.png";
 }

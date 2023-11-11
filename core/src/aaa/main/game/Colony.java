@@ -1,5 +1,7 @@
 package aaa.main.game;
 
+import aaa.main.util.Constants;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import static aaa.main.util.Constants.*;
 
 public class Colony {
-    private String cName;
+    private final String cName;
 
     private float resources;
 
@@ -18,7 +20,9 @@ public class Colony {
 
     //private Ant[MAX_ANTS] antArray;
 
-    private final Sprite sprite = new Sprite(new Texture(""));
+    private final Texture texture;
+
+    private Sprite sprite;
 
     private Body colony;
 
@@ -29,6 +33,11 @@ public class Colony {
         health=cHealth;
         antsAlive=ants;
         colony=cBody;
+        texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
+        sprite = new Sprite(texture);
+
+        //for rendering later
+        sprite.setScale((float)SCREEN_WIDTH/BORDER_WIDTH,(float)SCREEN_HEIGHT/BORDER_HEIGHT);
         /*for (int i = 0; i < ants; i++) {
             if (antsAlive < MAX_ANTS) {
                 antArray[i] = createAnt(colony.getPosition().x, colony.getPosition().y);
@@ -49,17 +58,25 @@ public class Colony {
 
     public void setHealth(float newHealth) {health=newHealth;}
 
+    public int getAntsAlive() {return antsAlive;}
+
+    public String getName() {return cName;}
+
     //Render method for drawing colony sprite
     public void render(SpriteBatch batch) {
         // First we position and rotate the sprite correctly
-        int posX = (int) colony.getPosition().x;
-        int posY = (int) colony.getPosition().y;
+        float posX = colony.getPosition().x * (10.8f *1.0775f);
+        float posY = colony.getPosition().y * (7.20f *1.075f);
         float rotation = (float) Math.toDegrees(colony.getAngle());
-        sprite.setPosition(posX, posY);
         sprite.setRotation(rotation);
+        sprite.setPosition(posX, posY);
 
         // Then we simply draw it as a normal sprite.
         sprite.draw(batch);
+    }
+
+    public void dispose() {
+        texture.dispose();
     }
 
 
