@@ -4,6 +4,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.physics.box2d.Body;
 
+import static aaa.main.util.Constants.PLAYER_MOVE_SPEED;
+
 public class PlayerInputProcessor implements InputProcessor {
     private float horizontalVelocity;
     private float verticalVelocity;
@@ -12,24 +14,57 @@ public class PlayerInputProcessor implements InputProcessor {
     public PlayerInputProcessor(Body player) {
         this.player = player;
     }
+
+    //handler for horizontal/vertical movement
     @Override
     public boolean keyDown(int keycode) {
 
         horizontalVelocity = 0;
         verticalVelocity = 0;
 
-        if (keycode == Input.Keys.LEFT) {
+        if (keycode == Input.Keys.A) {
             //move left
-            horizontalVelocity = -5;
-        } else if (keycode == Input.Keys.RIGHT) {
+            horizontalVelocity = -PLAYER_MOVE_SPEED;
+        }
+        if (keycode == Input.Keys.D) {
             //move right
-            horizontalVelocity = 5;
-        } else if (keycode == Input.Keys.UP) {
+            horizontalVelocity = PLAYER_MOVE_SPEED;
+        }
+        if (keycode == Input.Keys.W) {
             //move up
-            verticalVelocity = 5;
-        } else if (keycode == Input.Keys.DOWN) {
+            verticalVelocity = PLAYER_MOVE_SPEED;
+        }
+        if (keycode == Input.Keys.S) {
             //move down
-            verticalVelocity = -5;
+            verticalVelocity = -PLAYER_MOVE_SPEED;
+        }
+
+        player.setLinearVelocity(horizontalVelocity, verticalVelocity);
+
+        return false;
+    }
+
+    //handler for diagonal movement
+    public boolean keyDown2(int keycode1, int keycode2, float speedModifier) {
+
+        horizontalVelocity = 0;
+        verticalVelocity = 0;
+
+        if (keycode1 == Input.Keys.A && keycode2 == Input.Keys.W) {
+            horizontalVelocity = -PLAYER_MOVE_SPEED * speedModifier;
+            verticalVelocity = PLAYER_MOVE_SPEED * speedModifier;
+        }
+        if (keycode1 == Input.Keys.A && keycode2 == Input.Keys.S) {
+            horizontalVelocity = -PLAYER_MOVE_SPEED * speedModifier;
+            verticalVelocity = -PLAYER_MOVE_SPEED * speedModifier;
+        }
+        if (keycode1 == Input.Keys.D && keycode2 == Input.Keys.W) {
+            horizontalVelocity = PLAYER_MOVE_SPEED * speedModifier;
+            verticalVelocity = PLAYER_MOVE_SPEED * speedModifier;
+        }
+        if (keycode1 == Input.Keys.D && keycode2 == Input.Keys.S) {
+            horizontalVelocity = PLAYER_MOVE_SPEED * speedModifier;
+            verticalVelocity = -PLAYER_MOVE_SPEED * speedModifier;
         }
 
         player.setLinearVelocity(horizontalVelocity, verticalVelocity);
