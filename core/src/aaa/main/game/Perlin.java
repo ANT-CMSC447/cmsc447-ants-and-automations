@@ -44,7 +44,7 @@ public class Perlin {
 		seed = seed + 5;
                 osnoise = new OpenSimplexNoise(seed);
 
-		xoff_Set = 0f;
+		xoff_set = 0f;
 		yoff_set = 0f;
 
                 // compute the perlin map for the resource_array using the shifted seed
