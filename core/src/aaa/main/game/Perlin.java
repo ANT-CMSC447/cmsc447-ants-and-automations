@@ -1,5 +1,5 @@
 import static aaa.main.util.Constants.*;
-import static aaa.main.util.OpenSimplexNoiseKS.*
+import static aaa.main.util.OpenSimplexNoiseKS.*;
 
 public class Perlin {
 
@@ -15,7 +15,7 @@ public class Perlin {
 		float[][] wall_array;
 		float[][] resource_array;
 
-		boolean[][][] map = new boolean[2][width][height]
+		boolean[][][] map = new boolean[2][width][height];
 
 		float xoff_set = 0;
 		float yoff_set = 0;
