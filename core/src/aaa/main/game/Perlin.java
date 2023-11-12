@@ -68,19 +68,19 @@ public class Perlin {
                                 // is less than the theshold, make it as a resource
                                 // tile
 				if (RESOURCE_THRESHOLD < resource_array[i][j]) {
-					map[0][i][j] = 1;
+					map[0][i][j] = true;
 				} else {
-					map[0][i][j] = 0;
+					map[0][i][j] = false;
 				}
 
                                 // if the value in the i,j index of the wall array
                                 // is less than the theshold OR the title is marked
                                 // as a resource tile, mark it so it doesn't have
                                 // a wall
-				if (WALL_THRESHOLD < wall_array[i][j] || map[0][i][j] = 1) {
-					map[1][i][j] = 0;
+				if (WALL_THRESHOLD < wall_array[i][j] || map[0][i][j] == true) {
+					map[1][i][j] = false;
 				} else {
-					map[1][i][j] = 1;
+					map[1][i][j] = true;
 				}
 			}
 		}
