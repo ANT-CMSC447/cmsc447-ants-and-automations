@@ -1,3 +1,5 @@
+package aaa.main.util;
+
 /*
  * OpenSimplex Noise in Java.
  * by Kurt Spencer
