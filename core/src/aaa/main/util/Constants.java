@@ -26,8 +26,6 @@ public final class Constants {
     public static final String COLONY_TEXTURE_FILE = "col_nest.png";
 
     //camera movement constants
-    public static final float CAMERA_RETURN_SPEED = 2f;
-
     public static final float CAMERA_MOVE_SPEED = 8; //number is in pixels
 
     public static final float CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER = 2.5f; //best results between 2f-3f
