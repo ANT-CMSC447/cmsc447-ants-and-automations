@@ -36,4 +36,10 @@ public final class Constants {
     public static final float PLAYER_MOVE_SPEED = 5f;
 
     public static final float PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER = 0.7f; //number should be between 0 and 1, gets multiplied by PLAYER_MOVE_SPEED
+
+    //map generation
+
+    public static final float WALL_THRESHOLD = 0.5;
+    public static final float RESOURCE_THRESHOLD = 0.7;
+
 }
