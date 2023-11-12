@@ -39,7 +39,7 @@ public final class Constants {
 
     //map generation
 
-    public static final float WALL_THRESHOLD = 0.5;
-    public static final float RESOURCE_THRESHOLD = 0.7;
+    public static final float WALL_THRESHOLD = 0.5f;
+    public static final float RESOURCE_THRESHOLD = 0.7f;
 
 }
