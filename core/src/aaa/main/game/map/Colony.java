@@ -1,4 +1,4 @@
-package aaa.main.game;
+package aaa.main.game.map;
 
 import aaa.main.util.Constants;
 import com.badlogic.gdx.Gdx;
