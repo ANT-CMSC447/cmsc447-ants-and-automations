@@ -1,7 +1,7 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
-import aaa.main.game.Colony;
+import aaa.main.game.map.Colony;
 import aaa.main.game.input.PlayerInputProcessor;
 import aaa.main.game.map.MapManager;
 import aaa.main.stages.PauseMenu;
