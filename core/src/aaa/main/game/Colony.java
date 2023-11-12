@@ -5,12 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import static aaa.main.util.Constants.*;
 
 public class Colony {
-    private final String cName;
+    private String cName;
 
     private float resources;
 
@@ -20,14 +23,16 @@ public class Colony {
 
     //private Ant[MAX_ANTS] antArray;
 
-    private final Texture texture;
+    private Texture texture;
 
     private Sprite sprite;
 
     private Body colony;
 
+    private OrthographicCamera camera;
+
     // Constructor
-    public Colony(String name, float cResources, float cHealth, int ants, Body cBody) {
+    public Colony(String name, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera) {
         cName = name;
         resources=cResources;
         health=cHealth;
@@ -35,9 +40,11 @@ public class Colony {
         colony=cBody;
         texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
         sprite = new Sprite(texture);
+        camera = cCamera;
 
-        //for rendering later
-        sprite.setScale((float)SCREEN_WIDTH/BORDER_WIDTH,(float)SCREEN_HEIGHT/BORDER_HEIGHT);
+        sprite.setOriginCenter();
+        sprite.setPosition(colony.getPosition().x - sprite.getWidth() / 2, colony.getPosition().y - sprite.getHeight() / 2);
+
         /*for (int i = 0; i < ants; i++) {
             if (antsAlive < MAX_ANTS) {
                 antArray[i] = createAnt(colony.getPosition().x, colony.getPosition().y);
@@ -48,7 +55,9 @@ public class Colony {
     }
 
     //Overloaded constructors
-    public Colony(String name, Body cBody) {this(name, DEFAULT_RESOURCES, DEFAULT_HEALTH, DEFAULT_ANTS, cBody);}
+    public Colony(String name, Body cBody, OrthographicCamera camera) {
+        this(name, DEFAULT_RESOURCES, DEFAULT_HEALTH, DEFAULT_ANTS, cBody, camera);
+    }
 
     public float getResources() {return resources;}
 
@@ -65,8 +74,15 @@ public class Colony {
     //Render method for drawing colony sprite
     public void render(SpriteBatch batch) {
         // First we position and rotate the sprite correctly
-        float posX = colony.getPosition().x * (10.8f *1.0775f);
-        float posY = colony.getPosition().y * (7.20f *1.075f);
+
+        //set sprite batch position to world coordinates
+
+        Vector3 colonyPos = camera.project(new Vector3(colony.getPosition().x, colony.getPosition().y, 0));
+
+        sprite.setScale(2/camera.zoom);
+
+        float posX = colonyPos.x - sprite.getWidth()/2;
+        float posY = colonyPos.y - sprite.getHeight()/2;
         float rotation = (float) Math.toDegrees(colony.getAngle());
         sprite.setRotation(rotation);
         sprite.setPosition(posX, posY);
