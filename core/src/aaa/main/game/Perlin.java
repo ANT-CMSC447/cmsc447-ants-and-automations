@@ -17,8 +17,8 @@ public class Perlin {
 
 		boolean[][][] map = new boolean[2][width][height];
 
-		float xoff_set = 0;
-		float yoff_set = 0;
+		float xoff_set = 0f;
+		float yoff_set = 0f;
 
 		wall_array = new float[width][height];
 		resource_array = new float[width][height];
@@ -30,22 +30,22 @@ public class Perlin {
 
                 // compute the perlin map for the wall_array using the given seed
 		for (int i = 0; i < width; i++) {
-			yoff_set = 0;
+			yoff_set = 0f;
 			for (int j = 0; j < height; j++) {
 				float value = osnoise.noise(xoff_set, yoff_set);
 
 		                wall_array[i][j] = value;
-				yoff_set = 0.1;
+				yoff_set += 0.1f;
 			}
-			xoff_set += 0.1;
+			xoff_set += 0.1f;
 		}
 
                 // shift the seed
 		seed = seed + 5;
                 osnoise = new OpenSimplexNoise(seed);
 
-		xoff_Set = 0;
-		yoff_set = 0;
+		xoff_Set = 0f;
+		yoff_set = 0f;
 
                 // compute the perlin map for the resource_array using the shifted seed
 		for (int i = 0; i < width; i++) {
@@ -54,9 +54,9 @@ public class Perlin {
 				float value = osnoise.noise(xoff_set, yoff_set);
 
 				resource_array[i][j] = value;
-				yoff_set = 0.1;
+				yoff_set += 0.1f;
 			}
-			xoff_set += 0.1;
+			xoff_set += 0.1f;
 		}
 
 		// convert the perlin maps to binary maps by comparing the value at index
