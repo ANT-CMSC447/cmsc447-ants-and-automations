@@ -16,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import static aaa.main.util.Constants.*;
 
@@ -63,8 +65,6 @@ public class MainScreen extends ScreenAdapter {
 
         player = createBox(0,0,32*PPM,32*PPM,false);
 
-        antColonies[0] = new Colony("Parks&Rec", createBox((BORDER_HEIGHT-32)*PPM/2, (BORDER_WIDTH-32)*PPM/2, 32*PPM,32*PPM, true));
-
         playerInputProcessor = new PlayerInputProcessor(player);
 
         //World border definition
@@ -105,8 +105,7 @@ public class MainScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //for future use when debugging is needed
-        b2dr.render(world, cameraBox2D.combined);
+
 
         if (game.gameState.paused && !pauseOpened) {
             pauseMenu.setInput();
@@ -115,7 +114,9 @@ public class MainScreen extends ScreenAdapter {
             Gdx.input.setInputProcessor(stage);
             pauseOpened = false;
         }
-        game.batch.setProjectionMatrix(camera.combined.scl(PPM));
+
+        //for future use when debugging is needed
+        b2dr.render(world, cameraBox2D.combined);
         game.batch.begin();
         stage.draw();
         antColonies[0].render(game.batch);
