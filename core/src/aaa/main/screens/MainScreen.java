@@ -1,6 +1,7 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
+import aaa.main.game.Colony;
 import aaa.main.game.PlayerInputProcessor;
 import aaa.main.stages.PauseMenu;
 import aaa.main.game.CameraInputProcessor;
@@ -32,7 +33,6 @@ public class MainScreen extends ScreenAdapter {
 
     private boolean DEBUG = false;
     private Box2DDebugRenderer b2dr;
-    private OrthographicCamera camera;
     private World world;
     private Body player ,borderUP, borderDOWN, borderLEFT, borderRIGHT, circle;
     private final float SCALE = 2.0f;
@@ -43,6 +43,10 @@ public class MainScreen extends ScreenAdapter {
     CameraInputProcessor cameraInputProcessor;
     PlayerInputProcessor playerInputProcessor;
     InputMultiplexer inputMultiplexer;
+
+    private Colony colony1;
+    private Colony colony2;
+
     public MainScreen(final AntGame game) {
         inputMultiplexer = new InputMultiplexer();
 
@@ -61,6 +65,9 @@ public class MainScreen extends ScreenAdapter {
         b2dr = new Box2DDebugRenderer();
 
         player = createBox(0,0,32,32,false);
+
+        colony1 = new Colony("test1", createBox(128,128,32,32,true), camera);
+        colony2 = new Colony("test2", createBox(-128,-128,32,32,true), camera);
 
         playerInputProcessor = new PlayerInputProcessor(player);
 
@@ -112,6 +119,8 @@ public class MainScreen extends ScreenAdapter {
         //for future use when debugging is needed
         b2dr.render(world, camera.combined.scl(PPM));
 
+        game.batch.setProjectionMatrix(camera.combined);
+
         if (game.gameState.paused && !pauseOpened) {
             pauseMenu.setInput();
             pauseOpened = true;
@@ -121,7 +130,8 @@ public class MainScreen extends ScreenAdapter {
         }
         game.batch.begin();
         stage.draw();
-        antColonies[0].render(game.batch);
+        colony1.render(game.batch);
+        colony2.render(game.batch);
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
         }
@@ -221,7 +231,7 @@ public class MainScreen extends ScreenAdapter {
 
         //if 2 keys pressed at the same time, move diagonally (player)
         if (Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)) {
-           playerInputProcessor.keyDown2(Input.Keys.A, Input.Keys.W, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
+            playerInputProcessor.keyDown2(Input.Keys.A, Input.Keys.W, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)) {
             playerInputProcessor.keyDown2(Input.Keys.D, Input.Keys.W, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
