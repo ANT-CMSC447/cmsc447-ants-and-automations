@@ -1,5 +1,5 @@
-import static aaa.main.util.Constants.*;
-import static aaa.main.util.OpenSimplexNoiseKS.*;
+import static aaa.main.util.Constants;
+import aaa.main.util.OpenSimplexNoiseKS;
 
 public class Perlin {
 
@@ -67,7 +67,7 @@ public class Perlin {
                                 // if the value in the i,j index of the resource array
                                 // is less than the theshold, make it as a resource
                                 // tile
-				if (RESOURCE_THRESHOLD < resource_array[i][j]) {
+				if (Constants.RESOURCE_THRESHOLD < resource_array[i][j]) {
 					map[0][i][j] = true;
 				} else {
 					map[0][i][j] = false;
@@ -77,7 +77,7 @@ public class Perlin {
                                 // is less than the theshold OR the title is marked
                                 // as a resource tile, mark it so it doesn't have
                                 // a wall
-				if (WALL_THRESHOLD < wall_array[i][j] || map[0][i][j] == true) {
+				if (Constants.WALL_THRESHOLD < wall_array[i][j] || map[0][i][j] == true) {
 					map[1][i][j] = false;
 				} else {
 					map[1][i][j] = true;
