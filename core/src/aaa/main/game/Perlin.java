@@ -1,4 +1,6 @@
-import static aaa.main.util.Constants.*;
+import static aaa.main.util.Constants.WALL_THRESHOLD;
+import static aaa.main.util.Constants.RESOURCE_THRESHOLD;
+
 import aaa.main.util.OpenSimplexNoiseKS;
 
 public class Perlin {
