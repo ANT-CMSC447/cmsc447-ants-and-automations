@@ -25,14 +25,14 @@ public class Perlin {
 
 
                 // setting the seed
-                OpenSimplexNoise osnoise;
-                osnoise = new OpenSimplexNoise(seed);
+                OpenSimplexNoiseKS osnoise;
+                osnoise = new OpenSimplexNoiseKS(seed);
 
                 // compute the perlin map for the wall_array using the given seed
 		for (int i = 0; i < width; i++) {
 			yoff_set = 0f;
 			for (int j = 0; j < height; j++) {
-				float value = osnoise.noise(xoff_set, yoff_set);
+				float value = osnoise.eval(xoff_set, yoff_set);
 
 		                wall_array[i][j] = value;
 				yoff_set += 0.1f;
@@ -42,7 +42,7 @@ public class Perlin {
 
                 // shift the seed
 		seed = seed + 5;
-                osnoise = new OpenSimplexNoise(seed);
+                osnoise = new OpenSimplexNoiseKS(seed);
 
 		xoff_set = 0f;
 		yoff_set = 0f;
@@ -51,7 +51,7 @@ public class Perlin {
 		for (int i = 0; i < width; i++) {
 			yoff_set = 0;
 			for (int j = 0; j < height; j++) {
-				float value = osnoise.noise(xoff_set, yoff_set);
+				float value = osnoise.eval(xoff_set, yoff_set);
 
 				resource_array[i][j] = value;
 				yoff_set += 0.1f;
