@@ -11,11 +11,11 @@ import jdk.tools.jmod.Main;
 
 import java.util.ArrayList;
 
-
+//utility for accessing colonies from the master ArrayList in MainScreen
 public class ColonyUtils {
 
     //Example creation would look like:
-    //createColony("Colony 1", 100, 100, 10, colonyBody, camera, screen);
+    //createColony("Colony 1", false, 100, 100, 10, colonyBody, camera, screen);
     public static void createColony(String name, boolean isPlayer, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera, MainScreen screen) {
         Colony colony = new Colony(name, isPlayer, cResources, cHealth, ants, cBody, cCamera);
         screen.colonies.add(colony);

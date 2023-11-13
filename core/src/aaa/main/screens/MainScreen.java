@@ -59,8 +59,6 @@ public class MainScreen extends ScreenAdapter {
         //Camera initilization
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCREEN_WIDTH / SCALE , SCREEN_HEIGHT / SCALE);
-
-        //Gdx.input.setInputProcessor(cameraInputProcessor);
         this.cameraInputProcessor = new CameraInputProcessor(camera);
 
         //World/debug renderer initialization
@@ -69,6 +67,8 @@ public class MainScreen extends ScreenAdapter {
 
         player = createBox(0,0,32,32,false);
 
+
+        //Colony creation testing
         ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(128,128,32,32,true), camera, this);
         ColonyUtils.createColony("test2", false, 100, 100, 10, createBox(-128,-128,32,32,true), camera, this);
         ColonyUtils.createColony("test3", false, 100, 100, 10, createBox(128,-128,32,32,true), camera, this);
@@ -90,14 +90,6 @@ public class MainScreen extends ScreenAdapter {
 
         //set camera position to the center of the box
         camera.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
-
-//        Label.LabelStyle labelStyle = new Label.LabelStyle();
-//        labelStyle.fontColor = Color.BLUE;
-//        labelStyle.font = game.font;
-//        Label mainText = new Label("Main Screen", labelStyle);
-//        mainText.setPosition(450f, 400f);
-//
-//        stage.addActor(mainText);
 
         stage.addListener(new InputListener() {
             @Override
@@ -151,7 +143,7 @@ public class MainScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         camera.setToOrtho(false, (float) width / SCALE, (float) height / SCALE);
-//        viewport.update(width, height);
+        //viewport.update(width, height);
     }
 
     @Override
