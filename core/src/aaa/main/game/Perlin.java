@@ -1,3 +1,5 @@
+package aaa.main.game;
+
 import static aaa.main.util.Constants.WALL_THRESHOLD;
 import static aaa.main.util.Constants.RESOURCE_THRESHOLD;
 
