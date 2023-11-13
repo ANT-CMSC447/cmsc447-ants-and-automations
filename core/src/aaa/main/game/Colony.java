@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import static aaa.main.util.Constants.*;
 
+
 public class Colony {
     private String cName;
 
@@ -31,8 +32,11 @@ public class Colony {
 
     private OrthographicCamera camera;
 
+    private boolean playerOwned = false;
+
     // Constructor
-    public Colony(String name, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera) {
+    public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera) {
+        playerOwned = isPlayer;
         cName = name;
         resources=cResources;
         health=cHealth;
@@ -55,8 +59,8 @@ public class Colony {
     }
 
     //Overloaded constructors
-    public Colony(String name, Body cBody, OrthographicCamera camera) {
-        this(name, DEFAULT_RESOURCES, DEFAULT_HEALTH, DEFAULT_ANTS, cBody, camera);
+    public Colony(String name, boolean isPlayer, Body cBody, OrthographicCamera camera) {
+        this(name, false, DEFAULT_RESOURCES, DEFAULT_HEALTH, DEFAULT_ANTS, cBody, camera);
     }
 
     public float getResources() {return resources;}
@@ -91,9 +95,13 @@ public class Colony {
         sprite.draw(batch);
     }
 
+    public Body getColonyBody() {return colony;}
+
     public void dispose() {
         texture.dispose();
     }
+
+    public boolean isPlayerOwned() {return playerOwned;}
 
 
     //public Ant createAnt(float x, float y, String type) {}

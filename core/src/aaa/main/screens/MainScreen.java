@@ -23,7 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+import java.util.ArrayList;
+
 import static aaa.main.util.Constants.*;
+import aaa.main.util.ColonyUtils;
 
 public class MainScreen extends ScreenAdapter {
     private final AntGame game;
@@ -44,8 +47,8 @@ public class MainScreen extends ScreenAdapter {
     PlayerInputProcessor playerInputProcessor;
     InputMultiplexer inputMultiplexer;
 
-    private Colony colony1;
-    private Colony colony2;
+    //List for storing all colonies
+    public ArrayList<Colony> colonies = new ArrayList<Colony>();
 
     public MainScreen(final AntGame game) {
         inputMultiplexer = new InputMultiplexer();
@@ -66,8 +69,12 @@ public class MainScreen extends ScreenAdapter {
 
         player = createBox(0,0,32,32,false);
 
-        colony1 = new Colony("test1", createBox(128,128,32,32,true), camera);
-        colony2 = new Colony("test2", createBox(-128,-128,32,32,true), camera);
+        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(128,128,32,32,true), camera, this);
+        ColonyUtils.createColony("test2", false, 100, 100, 10, createBox(-128,-128,32,32,true), camera, this);
+        ColonyUtils.createColony("test3", false, 100, 100, 10, createBox(128,-128,32,32,true), camera, this);
+        ColonyUtils.createColony("test4", false, 100, 100, 10, createBox(-128,128,32,32,true), camera, this);
+
+        ColonyUtils.removeColonyByName("test1", this, world);
 
         playerInputProcessor = new PlayerInputProcessor(player);
 
@@ -130,8 +137,11 @@ public class MainScreen extends ScreenAdapter {
         }
         game.batch.begin();
         stage.draw();
-        colony1.render(game.batch);
-        colony2.render(game.batch);
+
+        for (Colony colony : colonies) {
+            colony.render(game.batch);
+        }
+
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
         }
@@ -249,10 +259,7 @@ public class MainScreen extends ScreenAdapter {
             player.setLinearVelocity(0, 0);
         }
 
-        //if touch dragged, use action from cameraInputProcessor
-//        if (Gdx.input.isTouched()) {
-//            cameraInputProcessor.touchDragged(Gdx.input.getX(), Gdx.input.getY(), 0);
-//        }
+
 
     }
     public void cameraUpdate(float delta) {
@@ -291,4 +298,5 @@ public class MainScreen extends ScreenAdapter {
     public void setCameraLock(boolean val) {
         this.cameraLock = val;
     }
+
 }
