@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -130,20 +131,23 @@ public class MainScreen extends ScreenAdapter {
         game.batch.begin();
         stage.draw();
 
-        for (Colony colony : colonies) {
-            colony.render(game.batch);
-        }
-
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
         }
         game.batch.end();
+
+        game.batch = new SpriteBatch();
+
+        for (Colony colony : colonies) {
+            colony.render(game.batch);
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, (float) width / SCALE, (float) height / SCALE);
-        //viewport.update(width, height);
+        camera.viewportHeight = height / SCALE;
+        camera.viewportWidth = width / SCALE;
+        camera.update();
     }
 
     @Override

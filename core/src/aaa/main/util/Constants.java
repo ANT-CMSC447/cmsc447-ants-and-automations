@@ -6,8 +6,8 @@ public final class Constants {
     public static final int BORDER_WIDTH = 200;
     public static final int BORDER_HEIGHT = 200;
 
-    public static final int SCREEN_WIDTH = 1080;
-    public static final int SCREEN_HEIGHT = 720;
+    public static final int SCREEN_WIDTH = 3440;
+    public static final int SCREEN_HEIGHT = 1440;
 
 
     //camera zoom constants
