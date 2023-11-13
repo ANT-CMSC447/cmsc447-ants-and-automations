@@ -1,4 +1,4 @@
-import static aaa.main.util.Constants;
+import static aaa.main.util.Constants.*;
 import aaa.main.util.OpenSimplexNoiseKS;
 
 public class Perlin {
@@ -12,16 +12,16 @@ public class Perlin {
 
 	static boolean[][][] generateMap(int width, int height, int seed) {
 		
-		float[][] wall_array;
-		float[][] resource_array;
+		double[][] wall_array;
+		double[][] resource_array;
 
 		boolean[][][] map = new boolean[2][width][height];
 
-		float xoff_set = 0f;
-		float yoff_set = 0f;
+		double xoff_set = 0;
+		double yoff_set = 0;
 
-		wall_array = new float[width][height];
-		resource_array = new float[width][height];
+		wall_array = new double[width][height];
+		resource_array = new double[width][height];
 
 
                 // setting the seed
@@ -32,7 +32,7 @@ public class Perlin {
 		for (int i = 0; i < width; i++) {
 			yoff_set = 0f;
 			for (int j = 0; j < height; j++) {
-				float value = osnoise.eval(xoff_set, yoff_set);
+				double value = osnoise.eval(xoff_set, yoff_set);
 
 		                wall_array[i][j] = value;
 				yoff_set += 0.1f;
@@ -44,14 +44,14 @@ public class Perlin {
 		seed = seed + 5;
                 osnoise = new OpenSimplexNoiseKS(seed);
 
-		xoff_set = 0f;
-		yoff_set = 0f;
+		xoff_set = 0;
+		yoff_set = 0;
 
                 // compute the perlin map for the resource_array using the shifted seed
 		for (int i = 0; i < width; i++) {
 			yoff_set = 0;
 			for (int j = 0; j < height; j++) {
-				float value = osnoise.eval(xoff_set, yoff_set);
+				double value = osnoise.eval(xoff_set, yoff_set);
 
 				resource_array[i][j] = value;
 				yoff_set += 0.1f;
@@ -67,7 +67,7 @@ public class Perlin {
                                 // if the value in the i,j index of the resource array
                                 // is less than the theshold, make it as a resource
                                 // tile
-				if (Constants.RESOURCE_THRESHOLD < resource_array[i][j]) {
+				if (RESOURCE_THRESHOLD < resource_array[i][j]) {
 					map[0][i][j] = true;
 				} else {
 					map[0][i][j] = false;
@@ -77,7 +77,7 @@ public class Perlin {
                                 // is less than the theshold OR the title is marked
                                 // as a resource tile, mark it so it doesn't have
                                 // a wall
-				if (Constants.WALL_THRESHOLD < wall_array[i][j] || map[0][i][j] == true) {
+				if (WALL_THRESHOLD < wall_array[i][j] || map[0][i][j] == true) {
 					map[1][i][j] = false;
 				} else {
 					map[1][i][j] = true;
