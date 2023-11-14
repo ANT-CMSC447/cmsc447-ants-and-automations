@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -23,7 +24,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+import java.util.ArrayList;
+
 import static aaa.main.util.Constants.*;
+import aaa.main.util.ColonyUtils;
 
 public class MainScreen extends ScreenAdapter {
     private final AntGame game;
@@ -44,8 +48,8 @@ public class MainScreen extends ScreenAdapter {
     PlayerInputProcessor playerInputProcessor;
     InputMultiplexer inputMultiplexer;
 
-    private Colony colony1;
-    private Colony colony2;
+    //List for storing all colonies
+    public ArrayList<Colony> colonies = new ArrayList<Colony>();
 
     public MainScreen(final AntGame game) {
         inputMultiplexer = new InputMultiplexer();
@@ -56,8 +60,6 @@ public class MainScreen extends ScreenAdapter {
         //Camera initilization
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCREEN_WIDTH / SCALE , SCREEN_HEIGHT / SCALE);
-
-        //Gdx.input.setInputProcessor(cameraInputProcessor);
         this.cameraInputProcessor = new CameraInputProcessor(camera);
 
         //World/debug renderer initialization
@@ -66,8 +68,14 @@ public class MainScreen extends ScreenAdapter {
 
         player = createBox(0,0,32,32,false);
 
-        colony1 = new Colony("test1", createBox(128,128,32,32,true), camera);
-        colony2 = new Colony("test2", createBox(-128,-128,32,32,true), camera);
+
+        //Colony creation testing
+        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(128,128,32,32,true), camera, this);
+        ColonyUtils.createColony("test2", false, 100, 100, 10, createBox(-128,-128,32,32,true), camera, this);
+        ColonyUtils.createColony("test3", false, 100, 100, 10, createBox(128,-128,32,32,true), camera, this);
+        ColonyUtils.createColony("test4", false, 100, 100, 10, createBox(-128,128,32,32,true), camera, this);
+
+        ColonyUtils.removeColonyByName("test1", this, world);
 
         playerInputProcessor = new PlayerInputProcessor(player);
 
@@ -83,14 +91,6 @@ public class MainScreen extends ScreenAdapter {
 
         //set camera position to the center of the box
         camera.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
-
-//        Label.LabelStyle labelStyle = new Label.LabelStyle();
-//        labelStyle.fontColor = Color.BLUE;
-//        labelStyle.font = game.font;
-//        Label mainText = new Label("Main Screen", labelStyle);
-//        mainText.setPosition(450f, 400f);
-//
-//        stage.addActor(mainText);
 
         stage.addListener(new InputListener() {
             @Override
@@ -130,18 +130,24 @@ public class MainScreen extends ScreenAdapter {
         }
         game.batch.begin();
         stage.draw();
-        colony1.render(game.batch);
-        colony2.render(game.batch);
+
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
         }
         game.batch.end();
+
+        game.batch = new SpriteBatch();
+
+        for (Colony colony : colonies) {
+            colony.render(game.batch);
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, (float) width / SCALE, (float) height / SCALE);
-//        viewport.update(width, height);
+        camera.viewportHeight = height / SCALE;
+        camera.viewportWidth = width / SCALE;
+        camera.update();
     }
 
     @Override
@@ -249,10 +255,7 @@ public class MainScreen extends ScreenAdapter {
             player.setLinearVelocity(0, 0);
         }
 
-        //if touch dragged, use action from cameraInputProcessor
-//        if (Gdx.input.isTouched()) {
-//            cameraInputProcessor.touchDragged(Gdx.input.getX(), Gdx.input.getY(), 0);
-//        }
+
 
     }
     public void cameraUpdate(float delta) {
@@ -291,4 +294,5 @@ public class MainScreen extends ScreenAdapter {
     public void setCameraLock(boolean val) {
         this.cameraLock = val;
     }
+
 }
