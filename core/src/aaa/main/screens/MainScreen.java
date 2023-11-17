@@ -70,12 +70,10 @@ public class MainScreen extends ScreenAdapter {
 
 
         //Colony creation testing
-        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(128,128,32,32,true), camera, this);
-        ColonyUtils.createColony("test2", false, 100, 100, 10, createBox(-128,-128,32,32,true), camera, this);
-        ColonyUtils.createColony("test3", false, 100, 100, 10, createBox(128,-128,32,32,true), camera, this);
-        ColonyUtils.createColony("test4", false, 100, 100, 10, createBox(-128,128,32,32,true), camera, this);
+        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(300,0,COLONY_WIDTH,COLONY_HEIGHT,true), camera, this);
 
-        ColonyUtils.removeColonyByName("test1", this, world);
+        ColonyUtils.addAnt(colonies.get(0), "worker", world);
+
 
         playerInputProcessor = new PlayerInputProcessor(player);
 
@@ -84,10 +82,10 @@ public class MainScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         //World border definition
-        borderUP = createBox(0, (float) BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
-        borderDOWN = createBox(0, (float) -BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
-        borderLEFT = createBox((float) -BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
-        borderRIGHT = createBox((float) BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
+        //borderUP = createBox(0, (float) BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
+        //borderDOWN = createBox(0, (float) -BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
+        //borderLEFT = createBox((float) -BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
+        //borderRIGHT = createBox((float) BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
 
         //set camera position to the center of the box
         camera.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);

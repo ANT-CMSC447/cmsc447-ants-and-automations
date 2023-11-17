@@ -42,4 +42,10 @@ public final class Constants {
     public static final float WALL_THRESHOLD = 0.5f;
     public static final float RESOURCE_THRESHOLD = 0.7f;
 
+    public static final int ANT_WIDTH = 32;
+    public static final int ANT_HEIGHT = 32;
+
+    public static final int COLONY_WIDTH = 64;
+    public static final int COLONY_HEIGHT = 64;
+
 }
