@@ -47,7 +47,7 @@ public class Colony {
         health=cHealth;
         antsAlive=ants;
         colony=cBody;
-        texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
+        Texture texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
         sprite = new Sprite(texture);
         camera = cCamera;
 
@@ -90,7 +90,7 @@ public class Colony {
 
         // Set sprite position and scale
         sprite.setPosition(colonyPos.x - sprite.getWidth() / 2, colonyPos.y - sprite.getHeight() / 2);
-        sprite.setScale(2 / camera.zoom);
+        sprite.setScale(2*(COLONY_WIDTH/sprite.getWidth()) / camera.zoom);
 
         // Set sprite rotation
         float rotation = (float) Math.toDegrees(colony.getAngle());
