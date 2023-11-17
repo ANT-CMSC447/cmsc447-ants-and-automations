@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import java.util.ArrayList;
+
 import static aaa.main.util.Constants.*;
 
 
@@ -34,6 +36,8 @@ public class Colony {
     private OrthographicCamera camera;
 
     private boolean playerOwned = false;
+
+    private ArrayList<Ant> antList = new ArrayList<Ant>();
 
     // Constructor
     public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera) {
@@ -105,6 +109,8 @@ public class Colony {
     }
 
     public boolean isPlayerOwned() {return playerOwned;}
+
+    public ArrayList<Ant> getAntsList() {return antList;}
 
 
     //public Ant createAnt(float x, float y, String type) {}
