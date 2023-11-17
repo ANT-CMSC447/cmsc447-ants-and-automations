@@ -6,10 +6,16 @@ import aaa.main.game.Colony;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import jdk.tools.jmod.Main;
 
+import static aaa.main.util.Constants.*;
 import java.util.ArrayList;
 
 //utility for accessing colonies from the master ArrayList in MainScreen
