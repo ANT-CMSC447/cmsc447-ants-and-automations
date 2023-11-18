@@ -38,7 +38,7 @@ public class MainScreen extends ScreenAdapter {
     private boolean DEBUG = false;
     private Box2DDebugRenderer b2dr;
     private World world;
-    private Body player ,borderUP, borderDOWN, borderLEFT, borderRIGHT, circle;
+    private Body player;
     private final float SCALE = 2.0f;
 
     boolean cameraLock = false;
@@ -70,8 +70,9 @@ public class MainScreen extends ScreenAdapter {
 
 
         //Colony creation testing
-        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(300,0,COLONY_WIDTH,COLONY_HEIGHT,true), camera, this);
+        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(150,150,COLONY_WIDTH,COLONY_HEIGHT,true), camera, this);
 
+        ColonyUtils.addAnt(colonies.get(0), "worker", world);
         ColonyUtils.addAnt(colonies.get(0), "worker", world);
 
 
@@ -168,6 +169,9 @@ public class MainScreen extends ScreenAdapter {
         world.dispose();
         b2dr.dispose();
         pauseMenu.dispose();
+        for (Colony colony : colonies) {
+            colony.dispose();
+        }
     }
 
     //Non tick based renderings

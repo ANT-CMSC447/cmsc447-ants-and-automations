@@ -5,7 +5,6 @@ import aaa.main.game.Ant;
 import aaa.main.game.Colony;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import jdk.tools.jmod.Main;
 
 import static aaa.main.util.Constants.*;
 import java.util.ArrayList;
@@ -80,35 +78,35 @@ public class ColonyUtils {
     public static Vector3 getAntSpawn(Colony colony, World world) {
         float step = smallestStep(world);
 
-        Vector2 up = colony.getColonyBody().getPosition();
-        up.y += COLONY_HEIGHT;
-        Vector2 down = colony.getColonyBody().getPosition();
-        down.y -= COLONY_HEIGHT;
-        Vector2 left = colony.getColonyBody().getPosition();
-        left.x -= COLONY_WIDTH;
-        Vector2 right = colony.getColonyBody().getPosition();
-        right.x += COLONY_WIDTH;
+        Vector2 up = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
+        up.y += COLONY_HEIGHT/PPM;
+        Vector2 down = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
+        down.y -= COLONY_HEIGHT/PPM;
+        Vector2 left = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
+        left.x -= COLONY_WIDTH/PPM;
+        Vector2 right = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
+        right.x += COLONY_WIDTH/PPM;
 
 
 
 
-
-        if (checkArea(step, world, up.add(-COLONY_WIDTH/2, -COLONY_HEIGHT/2), up.add(COLONY_WIDTH/2,COLONY_HEIGHT/2))) {
+        //check an area in each direction which is the size of an ant
+        if (checkArea(step, world, new Vector2(up.x -ANT_WIDTH/2f/PPM, up.y -ANT_HEIGHT/2f/PPM), new Vector2(up.x +ANT_WIDTH/2f/PPM,up.y +ANT_HEIGHT/2f/PPM))) {
             return new Vector3(up.x, up.y, 0);
         } else {
             System.out.println("Collision detected: up");
         }
-        if (checkArea(step, world, down.add(-COLONY_WIDTH/2, -COLONY_HEIGHT/2), down.add(COLONY_WIDTH/2,COLONY_HEIGHT/2))) {
+        if (checkArea(step, world, new Vector2(down.x -ANT_WIDTH/2f/PPM, down.y -ANT_HEIGHT/2f/PPM), new Vector2(down.x +ANT_WIDTH/2f/PPM,down.y +ANT_HEIGHT/2f/PPM))) {
             return new Vector3(down.x, down.y, 0);
         } else {
             System.out.println("Collision detected: down");
         }
-        if (checkArea(step, world, left.add(-COLONY_WIDTH/2, -COLONY_HEIGHT/2), left.add(COLONY_WIDTH/2,COLONY_HEIGHT/2))) {
+        if (checkArea(step, world, new Vector2(left.x -ANT_WIDTH/2f/PPM, left.y -ANT_HEIGHT/2f/PPM), new Vector2(left.x +ANT_WIDTH/2f/PPM,left.y +ANT_HEIGHT/2f/PPM))) {
             return new Vector3(left.x, left.y, 0);
         } else {
             System.out.println("Collision detected: left");
         }
-        if (checkArea(step, world, right.add(-COLONY_WIDTH/2, -COLONY_HEIGHT/2), right.add(COLONY_WIDTH/2,COLONY_HEIGHT/2))) {
+        if (checkArea(step, world, new Vector2(right.x -ANT_WIDTH/2f/PPM, right.y -ANT_HEIGHT/2f/PPM), new Vector2(right.x +ANT_WIDTH/2f/PPM,right.y +ANT_HEIGHT/2f/PPM))) {
             return new Vector3(right.x, right.y, 0);
         } else {
             System.out.println("Collision detected: right");
@@ -119,7 +117,7 @@ public class ColonyUtils {
 
     //Returns false when the area is NOT clear.
     private static boolean checkArea(float step, World world, Vector2 begin, Vector2 end) {
-        Array<Body> bodies = new Array<Body>();
+        Array<Body> bodies = new Array<>();
         world.getBodies(bodies);
         //Iterate over every body
         for (Body body : bodies) {
@@ -149,7 +147,7 @@ public class ColonyUtils {
         float minSize = Float.MAX_VALUE;
         //Gets bodies in world
         Array<Body> bodies;
-            bodies = new Array<Body>();
+            bodies = new Array<>();
             world.getBodies(bodies);
 
         //Iterate over every body
@@ -166,7 +164,7 @@ public class ColonyUtils {
                 }
             }
         }
-        return minSize / 2;
+        return minSize / 3;
     }
 
 }

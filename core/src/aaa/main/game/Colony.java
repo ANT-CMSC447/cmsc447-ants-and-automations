@@ -5,10 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.ArrayList;
@@ -25,8 +23,6 @@ public class Colony {
 
     private int antsAlive;
 
-    //private Ant[MAX_ANTS] antArray;
-
     private Texture texture;
 
     private Sprite sprite;
@@ -35,9 +31,9 @@ public class Colony {
 
     private OrthographicCamera camera;
 
-    private boolean playerOwned = false;
+    private boolean playerOwned;
 
-    private ArrayList<Ant> antList = new ArrayList<Ant>();
+    private ArrayList<Ant> antList = new ArrayList<>();
 
     // Constructor
     public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera) {
@@ -47,7 +43,7 @@ public class Colony {
         health=cHealth;
         antsAlive=ants;
         colony=cBody;
-        Texture texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
+        texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
         sprite = new Sprite(texture);
         camera = cCamera;
 

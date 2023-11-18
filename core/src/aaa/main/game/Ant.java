@@ -32,14 +32,15 @@ public class Ant {
         this.antType = type;
 
         //calls CreateBody, which will get the spawn location from ColonyUtils.getAntSpawn
-        //then will create the body in the world (shouldnt need to render), and then apply a sprite ontop of it.
+        //then will create the body in the world (shouldn't need to render), and then apply a sprite on top of it.
         Vector3 spawnLocation;
 
-        if (ColonyUtils.getAntSpawn(colony, world) != null) {
+        spawnLocation = ColonyUtils.getAntSpawn(colony, world);
+
+        if (spawnLocation != null) {
             System.out.println("Spawn location found for ant");
-            spawnLocation = ColonyUtils.getAntSpawn(colony, world);
         } else {
-            System.out.println("Error: No spawn location found for ant");
+            System.out.println("Error: No spawn location found for ant ");
             spawnLocation = new Vector3(0,0,0);
         }
 
@@ -55,12 +56,12 @@ public class Ant {
         BodyDef def = new BodyDef();
 
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(position.x / PPM, position.y / PPM);
+        def.position.set(position.x , position.y );
         def.fixedRotation = true;
         antBody = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(ANT_WIDTH / 2 / PPM, ANT_HEIGHT / 2 / PPM);
+        shape.setAsBox(ANT_WIDTH / 2f / PPM, ANT_HEIGHT / 2f / PPM);
 
         antBody.createFixture(shape, 1.0f);
         shape.dispose();
@@ -69,11 +70,11 @@ public class Ant {
     }
 
     private Sprite createSprite() {
-        if (antType == "Worker") {
+        if (antType.equals("Worker")) {
             texture = new Texture(Gdx.files.internal("workerAnt.png"));
             sprite = new Sprite(texture);
 
-        } else if (antType == "Soldier") {
+        } else if (antType.equals("Soldier")) {
 
         } else {
 
