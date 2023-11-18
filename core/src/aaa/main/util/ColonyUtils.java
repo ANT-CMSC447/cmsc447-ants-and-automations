@@ -68,8 +68,8 @@ public class ColonyUtils {
         return colony.getAntsList();
     }
 
-    public static void addAnt(Colony colony, String type, World world) {
-        colony.getAntsList().add(new Ant(colony, type, world));
+    public static void addAnt(Colony colony, String type, OrthographicCamera camera, World world) {
+        colony.getAntsList().add(new Ant(colony, type, camera, world));
     }
 
     //Takes in a colony and checks for the closest open spot to spawn an Ant
