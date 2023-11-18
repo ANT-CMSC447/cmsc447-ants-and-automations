@@ -90,6 +90,8 @@ public class Ant {
         antBody.createFixture(shape, 1.0f);
         shape.dispose();
 
+        antBody.setLinearDamping(5.0f);
+
         return antBody;
     }
 
