@@ -96,11 +96,20 @@ public class Colony {
         batch.begin();
         sprite.draw(batch);
         batch.end();
+
+        batch = new SpriteBatch();
+
+        for (Ant ant : antList) {
+            ant.render(batch);
+        }
     }
 
     public Body getColonyBody() {return colony;}
 
     public void dispose() {
+        for (Ant ant : antList) {
+            ant.dispose();
+        }
         texture.dispose();
     }
 

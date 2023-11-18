@@ -72,8 +72,8 @@ public class MainScreen extends ScreenAdapter {
         //Colony creation testing
         ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(150,150,COLONY_WIDTH,COLONY_HEIGHT,true), camera, this);
 
-        ColonyUtils.addAnt(colonies.get(0), "worker", world);
-        ColonyUtils.addAnt(colonies.get(0), "worker", world);
+        ColonyUtils.addAnt(colonies.get(0), "Worker", camera, world);
+        ColonyUtils.addAnt(colonies.get(0), "worker", camera, world);
 
 
         playerInputProcessor = new PlayerInputProcessor(player);
@@ -140,6 +140,7 @@ public class MainScreen extends ScreenAdapter {
         for (Colony colony : colonies) {
             colony.render(game.batch);
         }
+
     }
 
     @Override
