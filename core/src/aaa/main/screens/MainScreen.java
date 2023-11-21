@@ -1,20 +1,19 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
-import aaa.main.game.map.Colony;
+import aaa.main.game.input.CameraInputProcessor;
 import aaa.main.game.input.PlayerInputProcessor;
+import aaa.main.game.map.Colony;
 import aaa.main.game.map.MapManager;
 import aaa.main.stages.PauseMenu;
-import aaa.main.game.input.CameraInputProcessor;
+import aaa.main.util.ColonyUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
@@ -25,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.ArrayList;
 
 import static aaa.main.util.Constants.*;
-import aaa.main.util.ColonyUtils;
 
 public class MainScreen extends ScreenAdapter {
     private final AntGame game;
@@ -56,12 +54,13 @@ public class MainScreen extends ScreenAdapter {
 
         this.game = game;
         mapManager = new MapManager();
-        mapManager.setup();
+        mapManager.setup(game.batch);
         stage = new Stage();
 
         //Camera initilization
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, SCREEN_WIDTH / SCALE , SCREEN_HEIGHT / SCALE);
+        camera.setToOrtho(false, SCREEN_WIDTH / SCALE, SCREEN_HEIGHT / SCALE);
+//        camera.setToOrtho(false, 32, 32);
         this.cameraInputProcessor = new CameraInputProcessor(camera);
 
         //World/debug renderer initialization
@@ -131,7 +130,7 @@ public class MainScreen extends ScreenAdapter {
         }
         game.batch.begin();
         stage.draw();
-        mapManager.render(camera);
+
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
         }
@@ -139,10 +138,11 @@ public class MainScreen extends ScreenAdapter {
 
         game.batch = new SpriteBatch();
 
+        mapManager.render(camera);
+
         for (Colony colony : colonies) {
             colony.render(game.batch);
         }
-
     }
 
     @Override

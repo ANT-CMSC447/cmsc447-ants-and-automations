@@ -1,5 +1,6 @@
 package aaa.main.game;
 
+import aaa.main.game.map.Colony;
 import aaa.main.util.ColonyUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
