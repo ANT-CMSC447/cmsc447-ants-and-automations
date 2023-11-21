@@ -1,5 +1,6 @@
 package aaa.main.game.map;
 
+import aaa.main.game.Ant;
 import aaa.main.util.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

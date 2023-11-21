@@ -2,7 +2,7 @@ package aaa.main.util;
 
 import aaa.main.AntGame;
 import aaa.main.game.Ant;
-import aaa.main.game.Colony;
+import aaa.main.game.map.Colony;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
