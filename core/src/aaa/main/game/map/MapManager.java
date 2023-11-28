@@ -28,7 +28,7 @@ public class MapManager {
         map.getProperties().put("width", Constants.MAP_WIDTH);
         map.getProperties().put("height", Constants.MAP_HEIGHT);
 //        renderer = new OrthogonalTiledMapRenderer(map, 1/2f);
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM, batch);
+        renderer = new OrthogonalTiledMapRenderer(map, Constants.MAP_SCALE / Constants.PPM, batch);
 
         mapWidth = map.getProperties().get("width", Integer.class);
         mapHeight = map.getProperties().get("height", Integer.class);
@@ -74,11 +74,16 @@ public class MapManager {
     }
 
     public void render(OrthographicCamera camera) {
-        //camera.update();
         float width = 1.12f * camera.viewportWidth * camera.zoom;
-        float height = camera.viewportHeight * camera.zoom;
-        renderer.setView(camera.projection, -camera.position.x, -camera.position.y, width, height);
-//        renderer.setView(camera.combined, -camera.position.x, -camera.position.y, , camera.zoom / camera.position.y);
+        float height = 1.12f * camera.viewportHeight * camera.zoom;
+        float ppm_adj_width = mapWidth * ((Constants.MAP_SCALE * 4) / Constants.PPM);
+        float ppm_adj_height = mapHeight * ((Constants.MAP_SCALE * 4) / Constants.PPM);
+
+        float vbX = -camera.position.x - ppm_adj_width;
+        float vbY = -camera.position.y - ppm_adj_height;
+        float vbWidth = width + ppm_adj_width + camera.position.x;
+        float vbHeight = height + ppm_adj_height + camera.position.y;
+        renderer.setView(camera.projection, vbX, vbY, vbWidth, vbHeight);
         renderer.render();
     }
 

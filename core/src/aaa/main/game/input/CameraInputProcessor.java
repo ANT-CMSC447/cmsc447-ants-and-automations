@@ -24,12 +24,20 @@ public class CameraInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         //Camera zoom controls
-        if (keycode == Input.Keys.MINUS && camera.zoom <= Constants.MAX_ZOOM) {
+        if (keycode == Input.Keys.MINUS) {
             //zoom out
-            camera.zoom += 0.02f;
-        } else if (keycode == Input.Keys.EQUALS && camera.zoom >= Constants.MIN_ZOOM) {
+            if (camera.zoom + 0.02f <= Constants.MAX_ZOOM) {
+                camera.zoom += 0.02f;
+            } else {
+                camera.zoom = Constants.MAX_ZOOM;
+            }
+        } else if (keycode == Input.Keys.EQUALS) {
             //zoom in
-            camera.zoom -= 0.02f;
+            if (camera.zoom - 0.02f >= Constants.MIN_ZOOM) {
+                camera.zoom -= 0.02f;
+            } else {
+                camera.zoom = Constants.MIN_ZOOM;
+            }
         }
 
         //Camera movement controls
