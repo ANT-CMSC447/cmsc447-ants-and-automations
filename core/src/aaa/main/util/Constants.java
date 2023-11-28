@@ -11,9 +11,9 @@ public final class Constants {
 
 
     //camera zoom constants
-    public static final float MAX_ZOOM = 200.0f;
+    public static final float MAX_ZOOM = 2f;
 
-    public static final float MIN_ZOOM = 0.0f;
+    public static final float MIN_ZOOM = 0.2f;
 
     public static final float CAMERA_RETURN_SPEED = 0.1f;
 
@@ -39,7 +39,7 @@ public final class Constants {
 
     //map generation
 
-    public static final float WALL_THRESHOLD = 0.5f;
+    public static final float WALL_THRESHOLD = 0.4f;
     public static final float RESOURCE_THRESHOLD = 0.7f;
 
     public static final int ANT_WIDTH = 16;
@@ -53,7 +53,7 @@ public final class Constants {
 
     public static final int MAP_TILE_WIDTH = 8;
 
-    public static final int MAP_TILE_MULT = 4;
+    public static final int MAP_SCALE = 64;
 
     public static final int MAP_WIDTH = 200;
     public static final int MAP_HEIGHT = 200;
