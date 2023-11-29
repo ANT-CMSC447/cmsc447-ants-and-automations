@@ -1,5 +1,7 @@
 package aaa.main.util;
 
+import java.util.Map;
+
 public final class Constants {
     //PPM = Pixels Per Meter, since Box2D uses meters, and we use pixels (for scaling)
     public static final float PPM = 32;
@@ -40,6 +42,7 @@ public final class Constants {
     //map generation
 
     public static final float WALL_THRESHOLD = 0.4f;
+    public static final float COLONY_CANDIDATE_THRESHOLD = 0.2f;
     public static final float RESOURCE_THRESHOLD = 0.7f;
 
     public static final int ANT_WIDTH = 16;
@@ -57,4 +60,25 @@ public final class Constants {
 
     public static final int MAP_WIDTH = 200;
     public static final int MAP_HEIGHT = 200;
+
+    public static class TileInfo {
+        public TileInfo(int off_x, int off_y) {
+            this.off_x = off_x * Constants.MAP_TILE_WIDTH;
+            this.off_y = off_y * Constants.MAP_TILE_WIDTH;
+            this.size = Constants.MAP_TILE_WIDTH;
+        }
+        public int off_x;
+        public int off_y;
+        public int size;
+    }
+
+    public static Map<String, TileInfo> TILE_LIST = Map.ofEntries(
+            Map.entry("none", new TileInfo(0, 0)),
+            Map.entry("debug", new TileInfo(1, 0)),
+            Map.entry("dirt0", new TileInfo(2, 0)),
+            Map.entry("dirt1", new TileInfo(3, 0)),
+            Map.entry("dirt2", new TileInfo(4, 0)),
+            Map.entry("dirt3", new TileInfo(5, 0)),
+            Map.entry("stone", new TileInfo(6, 0))
+    );
 }

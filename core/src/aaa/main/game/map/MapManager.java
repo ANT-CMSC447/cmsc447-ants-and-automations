@@ -13,7 +13,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
-import static aaa.main.util.Constants.COLONY_WIDTH;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapManager {
     private Texture tileset;
@@ -39,27 +40,68 @@ public class MapManager {
                 new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_WIDTH * 2, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH)),
                 new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_WIDTH * 3, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH))
         };
-        TiledMapTileLayer floorLayer = getTiledMapTileLayer();
+        TiledMapTileLayer floorLayer = getFloorLayer();
         map.getLayers().add(floorLayer);
 
-        TiledMapTileLayer wallLayer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH);
-        boolean[][] perlinWallsMap = Perlin.generateMap(mapWidth, mapHeight, 0)[1];
+        boolean[][][] perlinMap = Perlin.generateMap(mapWidth, mapHeight, 0);
+        boolean[][] perlinWallsMap = perlinMap[1];
+
+        TiledMapTileLayer wallLayer = getLayer(
+                List.of(
+                        Constants.TILE_LIST.get("dirt0"),
+                        Constants.TILE_LIST.get("dirt1"),
+                        Constants.TILE_LIST.get("dirt2"),
+                        Constants.TILE_LIST.get("dirt3")
+                ),
+                perlinWallsMap,
+                mapWidth,
+                mapHeight
+        );
+        map.getLayers().add(wallLayer);
+
+        boolean[][] resourceMap = perlinMap[0];
+        // todo
+
+        Constants.TileInfo cTile = Constants.TILE_LIST.get("debug");
+        boolean[][] colonyCandidateMap = perlinMap[2];
+        TiledMapTileLayer candidateLayer = getLayer(cTile, colonyCandidateMap, mapWidth, mapHeight);
+        map.getLayers().add(candidateLayer);
+    }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
+    private TiledMapTileLayer getLayer(List<Constants.TileInfo> ctl, boolean[][] map, int mapWith, int mapHeight) {
+        List<StaticTiledMapTile> stl = new ArrayList<>();
+        for (Constants.TileInfo cTile : ctl) {
+            stl.add(new StaticTiledMapTile(new TextureRegion(tileset, cTile.off_x, cTile.off_y, cTile.size, cTile.size)));
+        }
+        TiledMapTileLayer layer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH);
         for (int x = 0; x < mapWidth; x++) {
             for (int y = 0; y < mapHeight; y++){
-                if (!perlinWallsMap[x][y]) {
+                if (!map[x][y]) {
                     continue;
                 }
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                int random = (int) Math.floor(Math.random() * dirt.length);
-                cell.setTile(dirt[random]);
-                wallLayer.setCell(x, y, cell);
+                int random = (int) Math.floor(Math.random() * stl.size());
+                StaticTiledMapTile tile = stl.get(random);
+                cell.setTile(tile);
+                layer.setCell(x, y, cell);
             }
         }
-        map.getLayers().add(wallLayer);
+        return layer;
     }
 
-    private TiledMapTileLayer getTiledMapTileLayer() {
-        StaticTiledMapTile stone = new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_WIDTH * 4, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH));
+    private TiledMapTileLayer getLayer(Constants.TileInfo cTile, boolean[][] map, int mapWidth, int mapHeight) {
+        List<Constants.TileInfo> ctl = new ArrayList<>();
+        ctl.add(cTile);
+        return getLayer(ctl, map, mapWidth, mapHeight);
+    }
+
+    private TiledMapTileLayer getFloorLayer() {
+        Constants.TileInfo cTile = Constants.TILE_LIST.get("stone");
+        StaticTiledMapTile stone = new StaticTiledMapTile(new TextureRegion(tileset, cTile.off_x, cTile.off_y, cTile.size, cTile.size));
 
         TiledMapTileLayer floorLayer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH);
 

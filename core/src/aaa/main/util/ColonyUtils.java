@@ -5,6 +5,8 @@ import aaa.main.game.Ant;
 import aaa.main.game.map.Colony;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -137,6 +139,26 @@ public class ColonyUtils {
         }
         System.out.println("No collision detected");
         return true;
+    }
+
+    public static boolean hasMapCollision(Body b1, Vector2 size, TiledMap map) {
+        float b1x = b1.getWorldCenter().x;
+        float b1y = b1.getWorldCenter().y;
+        float b1w = size.x;
+        float b1h = size.y;
+        float startx = b1x - b1w/2;
+        float starty = b1y - b1h/2;
+        float endx = b1x + b1w/2;
+        float endy = b1y + b1h/2;
+        for (float x = startx; x < endx; x += Constants.MAP_TILE_WIDTH) {
+            for (float y = starty; y < endy; y += Constants.MAP_TILE_WIDTH) {
+                TiledMapTileLayer tl = (TiledMapTileLayer) map.getLayers().get(1);
+                if (tl.getCell((int) x, (int) y) != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //return the half the smallest body size
