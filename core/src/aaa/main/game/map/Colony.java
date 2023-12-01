@@ -102,9 +102,11 @@ public class Colony extends MapObject {
         Vector2 actualPos = colonyBody.getPosition();
         if (!absPos.equals(actualPos)) {
             System.out.println("Positions different! expected: " + absPos.x + ", " + absPos.y + " actual: " + actualPos.x + ", " + actualPos.y);
+            Vector2 conv = CoordinateUtils.getMapCoordinates(actualPos);
+            this.setPosition(conv.x, conv.y);
         }
         colonyBody.setTransform(absPos, colonyBody.getAngle());
-        Vector3 colonyPos = camera.project(new Vector3(absPos.x, absPos.y, 0));
+        Vector3 colonyPos = camera.project(new Vector3(actualPos.x, actualPos.y, 0));
 
         // Set sprite position and scale
         sprite.setPosition(colonyPos.x - sprite.getWidth() / 2, colonyPos.y - sprite.getHeight() / 2);
