@@ -5,8 +5,10 @@ import aaa.main.game.input.CameraInputProcessor;
 import aaa.main.game.input.PlayerInputProcessor;
 import aaa.main.game.map.Colony;
 import aaa.main.game.map.MapManager;
+import aaa.main.game.map.MapObjectHandler;
 import aaa.main.stages.PauseMenu;
 import aaa.main.util.ColonyUtils;
+import aaa.main.util.RenderUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -33,15 +35,16 @@ public class MainScreen extends ScreenAdapter {
 
     private boolean DEBUG = false;
     private Box2DDebugRenderer b2dr;
-    private World world;
+    public World world;
 
     private MapManager mapManager;
+    private MapObjectHandler moh;
     private Body player;
     private final float SCALE = 2.0f;
 
     boolean cameraLock = false;
 
-    OrthographicCamera camera;
+    public OrthographicCamera camera;
     CameraInputProcessor cameraInputProcessor;
     PlayerInputProcessor playerInputProcessor;
     InputMultiplexer inputMultiplexer;
@@ -54,7 +57,7 @@ public class MainScreen extends ScreenAdapter {
 
         this.game = game;
         mapManager = new MapManager();
-        mapManager.setup(game.batch);
+        mapManager.setup(game.batch, 0, 3);
         stage = new Stage();
 
         //Camera initilization
@@ -67,27 +70,25 @@ public class MainScreen extends ScreenAdapter {
         world = new World(new Vector2(0, 0), false);
         b2dr = new Box2DDebugRenderer();
 
-        player = createBox(0,0,32,32,false);
+        player = RenderUtils.createBox(0,0,32,32,false, world);
 
 
         //Colony creation testing
-        ColonyUtils.createColony("test1", false, 100, 100, 10, createBox(150,150,COLONY_WIDTH,COLONY_HEIGHT,true), camera, this);
+//        ColonyUtils.createColony("test1", false, 100, 100, 10,  1, 1, camera,this);
 
-        ColonyUtils.addAnt(colonies.get(0), "Worker", camera, world);
-        ColonyUtils.addAnt(colonies.get(0), "worker", camera, world);
+        moh = new MapObjectHandler(mapManager.getMap(), this);
+        moh.setup();
 
+        for (Colony c : colonies) {
+            ColonyUtils.addAnt(c, "Worker", camera, world, moh);
+            ColonyUtils.addAnt(c, "Worker", camera, world, moh);
+        }
 
         playerInputProcessor = new PlayerInputProcessor(player);
 
         inputMultiplexer.addProcessor(playerInputProcessor);
         inputMultiplexer.addProcessor(cameraInputProcessor);
         Gdx.input.setInputProcessor(inputMultiplexer);
-
-        //World border definition
-        //borderUP = createBox(0, (float) BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
-        //borderDOWN = createBox(0, (float) -BORDER_HEIGHT /2, BORDER_WIDTH, 1, true);
-        //borderLEFT = createBox((float) -BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
-        //borderRIGHT = createBox((float) BORDER_WIDTH /2, 0, 1, BORDER_HEIGHT, true);
 
         //set camera position to the center of the box
         camera.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
@@ -116,9 +117,6 @@ public class MainScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //for future use when debugging is needed
-        b2dr.render(world, camera.combined.scl(PPM));
-
         game.batch.setProjectionMatrix(camera.combined);
 
         if (game.gameState.paused && !pauseOpened) {
@@ -139,6 +137,9 @@ public class MainScreen extends ScreenAdapter {
         game.batch = new SpriteBatch();
 
         mapManager.render(camera);
+
+        //for future use when debugging is needed
+        b2dr.render(world, camera.combined.scl(PPM));
 
         for (Colony colony : colonies) {
             colony.render(game.batch);
@@ -272,29 +273,6 @@ public class MainScreen extends ScreenAdapter {
             camera.position.set(position);
         }
         camera.update();
-    }
-
-    //helper function for creating a box.
-    public Body createBox(float x, float y, float width, float height, boolean isStatic) {
-        BodyDef def = new BodyDef();
-
-        if (isStatic) {
-            def.type = BodyDef.BodyType.StaticBody;
-        } else {
-            def.type = BodyDef.BodyType.DynamicBody;
-        }
-
-        def.position.set(x / PPM, y / PPM);
-        def.fixedRotation = true;
-        Body pBody = world.createBody(def);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2 / PPM, height / 2 / PPM);
-
-        pBody.createFixture(shape, 1.0f);
-        shape.dispose();
-
-        return pBody;
     }
 
     public void setCameraLock(boolean val) {

@@ -1,21 +1,23 @@
 package aaa.main.game.map;
 
-import aaa.main.game.Ant;
-import aaa.main.util.Constants;
+import aaa.main.util.ColonyUtils;
+import aaa.main.util.RenderUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
 
 import static aaa.main.util.Constants.*;
 
 
-public class Colony {
+public class Colony extends MapObject {
     private String cName;
 
     private float resources;
@@ -28,30 +30,38 @@ public class Colony {
 
     private Sprite sprite;
 
-    private Body colony;
+    private Body colonyBody;
 
     private OrthographicCamera camera;
+    private World world;
 
     private boolean playerOwned;
 
     private ArrayList<Ant> antList = new ArrayList<>();
 
+    float x;
+    float y;
+
     // Constructor
-    public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera) {
+    public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, OrthographicCamera cCamera, World world) {
+        super(x, y);
         playerOwned = isPlayer;
         cName = name;
         resources=cResources;
         health=cHealth;
         antsAlive=ants;
-        colony=cBody;
+        colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH,COLONY_HEIGHT,true, world);
         texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
         sprite = new Sprite(texture);
         camera = cCamera;
+        this.world = world;
+        this.x = x;
+        this.y = y;
 
         //set sprite to center on body
         sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
         //set position of sprite to position of body
-        sprite.setPosition(colony.getPosition().x, colony.getPosition().y);
+        sprite.setPosition(colonyBody.getPosition().x, colonyBody.getPosition().y);
 
         /*for (int i = 0; i < ants; i++) {
             if (antsAlive < MAX_ANTS) {
@@ -63,8 +73,8 @@ public class Colony {
     }
 
     //Overloaded constructors
-    public Colony(String name, boolean isPlayer, Body cBody, OrthographicCamera camera) {
-        this(name, false, DEFAULT_RESOURCES, DEFAULT_HEALTH, DEFAULT_ANTS, cBody, camera);
+    public Colony(String name, boolean isPlayer, float x, float y, OrthographicCamera camera, World world) {
+        this(name, false, DEFAULT_RESOURCES, DEFAULT_HEALTH, DEFAULT_ANTS, x, y, camera, world);
     }
 
     public float getResources() {return resources;}
@@ -83,14 +93,19 @@ public class Colony {
     public void render(SpriteBatch batch) {
          //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
-        Vector3 colonyPos = camera.project(new Vector3(colony.getPosition().x, colony.getPosition().y, 0));
+//        Vector3 colonyPos = camera.project(new Vector3(colony.getPosition().x, colony.getPosition().y, 0));
+//        System.out.println("Colony position: " + x + ", " + y);
+        Vector2 absPos = ColonyUtils.getAbsoluteCoordinates(new Vector2(this.x, this.y));
+//        System.out.println("Translated position: " + absPos.x + ", " + absPos.y);
+        colonyBody.setTransform(absPos, colonyBody.getAngle());
+        Vector3 colonyPos = camera.project(new Vector3(absPos.x, absPos.y, 0));
 
         // Set sprite position and scale
         sprite.setPosition(colonyPos.x - sprite.getWidth() / 2, colonyPos.y - sprite.getHeight() / 2);
         sprite.setScale(2*(COLONY_WIDTH/sprite.getWidth()) / camera.zoom);
 
         // Set sprite rotation
-        float rotation = (float) Math.toDegrees(colony.getAngle());
+        float rotation = (float) Math.toDegrees(colonyBody.getAngle());
         sprite.setRotation(rotation);
 
         // Draw the sprite
@@ -105,7 +120,7 @@ public class Colony {
         }
     }
 
-    public Body getColonyBody() {return colony;}
+    public Body getColonyBody() {return colonyBody;}
 
     public void dispose() {
         for (Ant ant : antList) {

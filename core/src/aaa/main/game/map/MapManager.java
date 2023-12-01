@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MapManager {
     private Texture tileset;
@@ -23,7 +24,7 @@ public class MapManager {
 
     private int mapWidth, mapHeight;
 
-    public void setup(SpriteBatch batch) {
+    public void setup(SpriteBatch batch, long seed, int num_colonies) {
         tileset = new Texture(Gdx.files.internal("tileset.png"));
         map = new TiledMap();
         map.getProperties().put("width", Constants.MAP_WIDTH);
@@ -43,7 +44,7 @@ public class MapManager {
         TiledMapTileLayer floorLayer = getFloorLayer();
         map.getLayers().add(floorLayer);
 
-        boolean[][][] perlinMap = Perlin.generateMap(mapWidth, mapHeight, 0);
+        boolean[][][] perlinMap = Perlin.generateMap(mapWidth, mapHeight, seed);
         boolean[][] perlinWallsMap = perlinMap[1];
 
         TiledMapTileLayer wallLayer = getLayer(
@@ -65,6 +66,30 @@ public class MapManager {
         Constants.TileInfo cTile = Constants.TILE_LIST.get("debug");
         boolean[][] colonyCandidateMap = perlinMap[2];
         TiledMapTileLayer candidateLayer = getLayer(cTile, colonyCandidateMap, mapWidth, mapHeight);
+        class Coordinate {
+            int x, y;
+            Coordinate(int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        List<Coordinate> colonyCandidates = new ArrayList<>();
+        for (int x = 0; x < colonyCandidateMap.length; x++) {
+            for (int y = 0; y < colonyCandidateMap[0].length; y++) {
+                if (colonyCandidateMap[x][y]) {
+                    colonyCandidates.add(new Coordinate(x, y));
+                }
+            }
+        }
+        Random rand = new Random(seed);
+        for (int i = 0; i < num_colonies; i++) {
+            int random = rand.nextInt(colonyCandidates.size());
+            Coordinate c = colonyCandidates.get(random);
+            colonyCandidates.remove(random);
+        }
+        for (Coordinate c : colonyCandidates) {
+            candidateLayer.setCell(c.x, c.y, null);
+        }
         map.getLayers().add(candidateLayer);
     }
 

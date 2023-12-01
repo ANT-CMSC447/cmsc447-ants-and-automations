@@ -1,12 +1,14 @@
-package aaa.main.game;
+package aaa.main.game.map;
 
 import aaa.main.game.map.Colony;
 import aaa.main.util.ColonyUtils;
+import aaa.main.util.RenderUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -16,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import static aaa.main.util.Constants.*;
 
 
-public class Ant {
+public class Ant extends MapObject {
     private int health;
     private int attack;
     private String antType;
@@ -27,11 +29,10 @@ public class Ant {
     private Sprite sprite;
     private OrthographicCamera camera;
 
-
-    public Ant() {
-
-    }
-    public Ant(Colony colony, String type, OrthographicCamera camera, World world) {
+    float x;
+    float y;
+    public Ant(Colony colony, String type, OrthographicCamera camera, World world, MapObjectHandler moh) {
+        super(-9999,-9999);
         this.colony = colony;
         this.antType = type;
         this.camera = camera;
@@ -40,7 +41,7 @@ public class Ant {
         //then will create the body in the world (shouldn't need to render), and then apply a sprite on top of it.
         Vector3 spawnLocation;
 
-        spawnLocation = ColonyUtils.getAntSpawn(colony, world);
+        spawnLocation = ColonyUtils.getAntSpawn(colony, world, moh);
 
         if (spawnLocation != null) {
             System.out.println("Spawn location found for ant");
@@ -48,6 +49,8 @@ public class Ant {
             System.out.println("Error: No spawn location found for ant ");
             spawnLocation = new Vector3(0,0,0);
         }
+
+        this.setPosition(spawnLocation.x, spawnLocation.y);
 
         createBody(world, spawnLocation);
         createType();
@@ -57,7 +60,10 @@ public class Ant {
     public void render(SpriteBatch batch) {
         //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
-        Vector3 antPos = camera.project(new Vector3(antBody.getPosition().x, antBody.getPosition().y, 0));
+        Vector2 pos = this.getPos();
+        Vector2 absPos = ColonyUtils.getAbsoluteCoordinates(pos);
+        Vector3 antPos = camera.project(new Vector3(absPos.x, absPos.y, 0));
+        this.antBody.setTransform(absPos.x, absPos.y, this.antBody.getAngle());
 
         // Set sprite position and scale
         sprite.setPosition(antPos.x - sprite.getWidth() / 2, antPos.y - sprite.getHeight() / 2);
