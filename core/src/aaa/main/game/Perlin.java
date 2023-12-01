@@ -13,7 +13,7 @@ public class Perlin {
         // corresponds to a tile without a wall and 1 corresponds
         // to a tile with a wall.
 
-	public static boolean[][][] generateMap(int width, int height, int seed) {
+	public static boolean[][][] generateMap(int width, int height, long seed) {
 		
 		double[][] wall_array;
 		double[][] resource_array;

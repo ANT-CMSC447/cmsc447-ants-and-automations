@@ -1,8 +1,8 @@
 package aaa.main.util;
 
-import aaa.main.AntGame;
-import aaa.main.game.Ant;
+import aaa.main.game.map.Ant;
 import aaa.main.game.map.Colony;
+import aaa.main.game.map.MapObjectHandler;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,9 +23,10 @@ public class ColonyUtils {
 
     //Example creation would look like:
     //createColony("Colony 1", false, 100, 100, 10, colonyBody, camera, screen);
-    public static void createColony(String name, boolean isPlayer, float cResources, float cHealth, int ants, Body cBody, OrthographicCamera cCamera, MainScreen screen) {
-        Colony colony = new Colony(name, isPlayer, cResources, cHealth, ants, cBody, cCamera);
-        screen.colonies.add(colony);
+    public static Colony createColony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, MainScreen screen) {
+        Colony colony = new Colony(name, isPlayer, cResources, cHealth, ants, x, y, screen.camera, screen.world);
+        addColony(colony, screen);
+        return colony;
     }
 
     public static Colony getColonyByName(String name, MainScreen screen) {
@@ -70,49 +71,67 @@ public class ColonyUtils {
         return colony.getAntsList();
     }
 
-    public static void addAnt(Colony colony, String type, OrthographicCamera camera, World world) {
-        colony.getAntsList().add(new Ant(colony, type, camera, world));
+    public static Ant addAnt(Colony colony, String type, OrthographicCamera camera, World world, MapObjectHandler moh) {
+        Ant ant = new Ant(colony, type, camera, world, moh);
+        colony.getAntsList().add(ant);
+        return ant;
     }
 
     //Takes in a colony and checks for the closest open spot to spawn an Ant
     //Begins checking the right, down, left, and up. Returns the world coords
     //where the ant can spawn.
-    public static Vector3 getAntSpawn(Colony colony, World world) {
+    public static Vector3 getAntSpawn(Colony colony, World world, MapObjectHandler moh) {
         float step = smallestStep(world);
 
-        Vector2 up = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
-        up.y += COLONY_HEIGHT/PPM;
-        Vector2 down = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
-        down.y -= COLONY_HEIGHT/PPM;
-        Vector2 left = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
-        left.x -= COLONY_WIDTH/PPM;
-        Vector2 right = new Vector2(colony.getColonyBody().getPosition().x, colony.getColonyBody().getPosition().y);
-        right.x += COLONY_WIDTH/PPM;
+        Vector2 pos = colony.getPos();
+        System.out.println("Colony position: " + pos.x + ", " + pos.y);
+        Vector2 up = new Vector2(pos.x, pos.y + 2);
+        Vector2 down = new Vector2(pos.x, pos.y - 2);
+        Vector2 left = new Vector2(pos.x - 2, pos.y);
+        Vector2 right = new Vector2(pos.x + 2, pos.y);
 
-
-
+        if (moh.collides(up.x, up.y)) {
+            System.out.println("Collision detected: up");
+        } else {
+            return new Vector3(up.x, up.y, 0);
+        }
+        if (moh.collides(down.x, down.y)) {
+            System.out.println("Collision detected: down");
+        } else {
+            return new Vector3(down.x, down.y, 0);
+        }
+        if (moh.collides(left.x, left.y)) {
+            System.out.println("Collision detected: left");
+        } else {
+            return new Vector3(left.x, left.y, 0);
+        }
+        if (moh.collides(right.x, right.y)) {
+            System.out.println("Collision detected: right");
+        } else {
+            return new Vector3(right.x, right.y, 0);
+        }
 
         //check an area in each direction which is the size of an ant
-        if (checkArea(step, world, new Vector2(up.x -ANT_WIDTH/2f/PPM, up.y -ANT_HEIGHT/2f/PPM), new Vector2(up.x +ANT_WIDTH/2f/PPM,up.y +ANT_HEIGHT/2f/PPM))) {
-            return new Vector3(up.x, up.y, 0);
-        } else {
-            System.out.println("Collision detected: up");
-        }
-        if (checkArea(step, world, new Vector2(down.x -ANT_WIDTH/2f/PPM, down.y -ANT_HEIGHT/2f/PPM), new Vector2(down.x +ANT_WIDTH/2f/PPM,down.y +ANT_HEIGHT/2f/PPM))) {
-            return new Vector3(down.x, down.y, 0);
-        } else {
-            System.out.println("Collision detected: down");
-        }
-        if (checkArea(step, world, new Vector2(left.x -ANT_WIDTH/2f/PPM, left.y -ANT_HEIGHT/2f/PPM), new Vector2(left.x +ANT_WIDTH/2f/PPM,left.y +ANT_HEIGHT/2f/PPM))) {
-            return new Vector3(left.x, left.y, 0);
-        } else {
-            System.out.println("Collision detected: left");
-        }
-        if (checkArea(step, world, new Vector2(right.x -ANT_WIDTH/2f/PPM, right.y -ANT_HEIGHT/2f/PPM), new Vector2(right.x +ANT_WIDTH/2f/PPM,right.y +ANT_HEIGHT/2f/PPM))) {
-            return new Vector3(right.x, right.y, 0);
-        } else {
-            System.out.println("Collision detected: right");
-        }
+//        if (checkArea(step, world, new Vector2(up.x -ANT_WIDTH/2f/PPM, up.y -ANT_HEIGHT/2f/PPM), new Vector2(up.x +ANT_WIDTH/2f/PPM,up.y +ANT_HEIGHT/2f/PPM))) {
+//            return new Vector3(up.x, up.y, 0);
+//        } else {
+//            System.out.println("Collision detected: up");
+//        }
+//        if (checkArea(step, world, new Vector2(down.x -ANT_WIDTH/2f/PPM, down.y -ANT_HEIGHT/2f/PPM), new Vector2(down.x +ANT_WIDTH/2f/PPM,down.y +ANT_HEIGHT/2f/PPM))) {
+//            return new Vector3(down.x, down.y, 0);
+//        } else {
+//            System.out.println("Collision detected: down");
+//        }
+//        if (checkArea(step, world, new Vector2(left.x -ANT_WIDTH/2f/PPM, left.y -ANT_HEIGHT/2f/PPM), new Vector2(left.x +ANT_WIDTH/2f/PPM,left.y +ANT_HEIGHT/2f/PPM))) {
+//            return new Vector3(left.x, left.y, 0);
+//        } else {
+//            System.out.println("Collision detected: left");
+//        }
+//        if (checkArea(step, world, new Vector2(right.x -ANT_WIDTH/2f/PPM, right.y -ANT_HEIGHT/2f/PPM), new Vector2(right.x +ANT_WIDTH/2f/PPM,right.y +ANT_HEIGHT/2f/PPM))) {
+//            return new Vector3(right.x, right.y, 0);
+//        } else {
+//            System.out.println("Collision detected: right");
+//        }
 
         return null;
     }
@@ -141,7 +160,19 @@ public class ColonyUtils {
         return true;
     }
 
-    public static boolean hasMapCollision(Body b1, Vector2 size, TiledMap map) {
+    public static Vector2 getAbsoluteCoordinates(Vector2 mapCoordinates) {
+        float difference = 256f / (MAP_TILE_WIDTH * MAP_SCALE);
+//        System.out.println("Difference: " + difference);
+//        System.out.println("Map coordinates: " + mapCoordinates.x + ", " + mapCoordinates.y);
+        return new Vector2(mapCoordinates.x * difference, mapCoordinates.y * difference);
+    }
+
+    public static Vector2 getMapCoordinates(Vector2 absoluteCoordinates) {
+        float difference = (MAP_TILE_WIDTH * MAP_SCALE) / 256f;
+        return new Vector2(absoluteCoordinates.x * difference, absoluteCoordinates.y * difference);
+    }
+
+    public static boolean hasMapCollision(Body b1, Vector2 size, MapObjectHandler moh) {
         float b1x = b1.getWorldCenter().x;
         float b1y = b1.getWorldCenter().y;
         float b1w = size.x;
@@ -152,8 +183,7 @@ public class ColonyUtils {
         float endy = b1y + b1h/2;
         for (float x = startx; x < endx; x += Constants.MAP_TILE_WIDTH) {
             for (float y = starty; y < endy; y += Constants.MAP_TILE_WIDTH) {
-                TiledMapTileLayer tl = (TiledMapTileLayer) map.getLayers().get(1);
-                if (tl.getCell((int) x, (int) y) != null) {
+                if (moh.collides(x, y)) {
                     return true;
                 }
             }
