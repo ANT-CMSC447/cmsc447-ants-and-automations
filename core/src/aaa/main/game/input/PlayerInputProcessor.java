@@ -1,6 +1,7 @@
 package aaa.main.game.input;
 
 import aaa.main.util.ColonyUtils;
+import aaa.main.util.CoordinateUtils;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
@@ -44,7 +45,7 @@ public class PlayerInputProcessor implements InputProcessor {
         player.setLinearVelocity(horizontalVelocity, verticalVelocity);
         Vector2 ppos = player.getPosition();
         System.out.println("ppos: " + ppos.x + ", " + ppos.y);
-        Vector2 mpos = ColonyUtils.getMapCoordinates(ppos);
+        Vector2 mpos = CoordinateUtils.getMapCoordinates(ppos);
         System.out.println("mpos: " + mpos.x + ", " + mpos.y);
         return false;
     }

@@ -1,6 +1,7 @@
 package aaa.main.game.map;
 
 import aaa.main.util.ColonyUtils;
+import aaa.main.util.CoordinateUtils;
 import aaa.main.util.RenderUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -44,19 +45,21 @@ public class Colony extends MapObject {
 
     // Constructor
     public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, OrthographicCamera cCamera, World world) {
-        super(x, y);
+        super(x, y, COLONY_WIDTH, COLONY_HEIGHT);
         playerOwned = isPlayer;
         cName = name;
         resources=cResources;
         health=cHealth;
         antsAlive=ants;
-        colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH,COLONY_HEIGHT,true, world);
+        colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,COLONY_HEIGHT * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,true, world);
         texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
         sprite = new Sprite(texture);
         camera = cCamera;
         this.world = world;
         this.x = x;
         this.y = y;
+        Vector2 transform = CoordinateUtils.getAbsoluteCoordinates(new Vector2(x, y));
+        colonyBody.setTransform(transform, colonyBody.getAngle());
 
         //set sprite to center on body
         sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
@@ -95,14 +98,22 @@ public class Colony extends MapObject {
         // Project colony body position to screen coordinates
 //        Vector3 colonyPos = camera.project(new Vector3(colony.getPosition().x, colony.getPosition().y, 0));
 //        System.out.println("Colony position: " + x + ", " + y);
-        Vector2 absPos = ColonyUtils.getAbsoluteCoordinates(new Vector2(this.x, this.y));
-//        System.out.println("Translated position: " + absPos.x + ", " + absPos.y);
+        Vector2 absPos = CoordinateUtils.getAbsoluteCoordinates(new Vector2(this.x, this.y));
+        Vector2 actualPos = colonyBody.getPosition();
+        if (!absPos.equals(actualPos)) {
+            System.out.println("Positions different! expected: " + absPos.x + ", " + absPos.y + " actual: " + actualPos.x + ", " + actualPos.y);
+        }
         colonyBody.setTransform(absPos, colonyBody.getAngle());
         Vector3 colonyPos = camera.project(new Vector3(absPos.x, absPos.y, 0));
 
         // Set sprite position and scale
         sprite.setPosition(colonyPos.x - sprite.getWidth() / 2, colonyPos.y - sprite.getHeight() / 2);
-        sprite.setScale(2*(COLONY_WIDTH/sprite.getWidth()) / camera.zoom);
+
+        // was 32, testing 64
+        int SCALE_FACTOR = MAP_TILE_PIXELS * COLONY_WIDTH * TILE_CONVERSION_FACTOR;
+
+
+        sprite.setScale(2*(SCALE_FACTOR/sprite.getWidth()) / camera.zoom);
 
         // Set sprite rotation
         float rotation = (float) Math.toDegrees(colonyBody.getAngle());
