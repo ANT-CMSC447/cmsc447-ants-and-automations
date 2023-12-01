@@ -36,10 +36,10 @@ public class MapManager {
         mapHeight = map.getProperties().get("height", Integer.class);
 
         StaticTiledMapTile[] dirt = {
-                new StaticTiledMapTile(new TextureRegion(tileset, 0, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH)),
-                new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_WIDTH, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH)),
-                new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_WIDTH * 2, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH)),
-                new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_WIDTH * 3, 0, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH))
+                new StaticTiledMapTile(new TextureRegion(tileset, 0, 0, Constants.MAP_TILE_PIXELS, Constants.MAP_TILE_PIXELS)),
+                new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_PIXELS, 0, Constants.MAP_TILE_PIXELS, Constants.MAP_TILE_PIXELS)),
+                new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_PIXELS * 2, 0, Constants.MAP_TILE_PIXELS, Constants.MAP_TILE_PIXELS)),
+                new StaticTiledMapTile(new TextureRegion(tileset, Constants.MAP_TILE_PIXELS * 3, 0, Constants.MAP_TILE_PIXELS, Constants.MAP_TILE_PIXELS))
         };
         TiledMapTileLayer floorLayer = getFloorLayer();
         map.getLayers().add(floorLayer);
@@ -102,7 +102,7 @@ public class MapManager {
         for (Constants.TileInfo cTile : ctl) {
             stl.add(new StaticTiledMapTile(new TextureRegion(tileset, cTile.off_x, cTile.off_y, cTile.size, cTile.size)));
         }
-        TiledMapTileLayer layer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH);
+        TiledMapTileLayer layer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_PIXELS, Constants.MAP_TILE_PIXELS);
         for (int x = 0; x < mapWidth; x++) {
             for (int y = 0; y < mapHeight; y++){
                 if (!map[x][y]) {
@@ -128,7 +128,7 @@ public class MapManager {
         Constants.TileInfo cTile = Constants.TILE_LIST.get("stone");
         StaticTiledMapTile stone = new StaticTiledMapTile(new TextureRegion(tileset, cTile.off_x, cTile.off_y, cTile.size, cTile.size));
 
-        TiledMapTileLayer floorLayer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_WIDTH, Constants.MAP_TILE_WIDTH);
+        TiledMapTileLayer floorLayer = new TiledMapTileLayer(mapWidth, mapHeight, Constants.MAP_TILE_PIXELS, Constants.MAP_TILE_PIXELS);
 
         for (int x = 0; x < mapWidth; x++) {
             for (int y = 0; y < mapHeight; y++){

@@ -2,8 +2,10 @@ package aaa.main.game.map;
 
 import aaa.main.screens.MainScreen;
 import aaa.main.util.ColonyUtils;
+import aaa.main.util.CoordinateUtils;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,19 @@ public class MapObjectHandler {
         for (int x = 0; x < layer.getWidth(); x++) {
             for (int y = 0; y < layer.getHeight(); y++) {
                 if (layer.getCell(x, y) != null) {
-                    System.out.println("Cell at " + x + ", " + y + " is not null");
-                    MapObject o = ColonyUtils.createColony("test" + (colonyCount++), false, 100, 100, 10,  x - 100, y - 100, screen);
+                    Vector2 coords = CoordinateUtils.getMapCoordinatesFromTileMapOffset(new Vector2(x, y));
+                    System.out.println(
+                            "Cell at " + x + ", " + y + " is not null, offset: " + coords.x + ", " + coords.y);
+                    MapObject o = ColonyUtils.createColony(
+                            "test" + (colonyCount++),
+                            false,
+                            100,
+                            100,
+                            10,
+                            coords.x,
+                            coords.y,
+                            screen
+                    );
                     objects.add(o);
                 }
             }
@@ -40,20 +53,29 @@ public class MapObjectHandler {
 
     public boolean collides(float x, float y) {
         TiledMapTileLayer layer = (TiledMapTileLayer) this.map.getLayers().get(1);
-        boolean mapColl = layer.getCell((int) x, (int) y) != null;
+
+        Vector2 tilePos = CoordinateUtils.getTileMapOffsetCoordinates(new Vector2(x, y));
+        boolean mapColl = layer.getCell((int) tilePos.x, (int) tilePos.y) != null;
+
+        if (mapColl) {
+            System.out.println("Return on map collision");
+            return true;
+        }
 
         boolean objColl = false;
 
         // TODO handle object size
         for (MapObject o : objects) {
-            if ((int) o.getPos().x == (int) x && (int) o.getPos().y == (int) y) {
+            float startx = o.getPos().x - (o.getSize().x / 2f);
+            float starty = o.getPos().y - (o.getSize().y / 2f);
+            float endx = o.getPos().x + (o.getSize().x / 2f);
+            float endy = o.getPos().y + (o.getSize().y / 2f);
+            if (x >= startx && x <= endx && y >= starty && y <= endy) {
                 objColl = true;
                 break;
             }
         }
-        System.out.println("Pos: " + x + ", " + y);
-        System.out.println("Map collision: " + mapColl);
-        System.out.println("Object collision: " + objColl);
-        return mapColl || objColl;
+        System.out.println("Return on object collision, val: " + objColl);
+        return objColl;
     }
 }

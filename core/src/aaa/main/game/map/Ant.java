@@ -2,6 +2,7 @@ package aaa.main.game.map;
 
 import aaa.main.game.map.Colony;
 import aaa.main.util.ColonyUtils;
+import aaa.main.util.CoordinateUtils;
 import aaa.main.util.RenderUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -32,7 +33,7 @@ public class Ant extends MapObject {
     float x;
     float y;
     public Ant(Colony colony, String type, OrthographicCamera camera, World world, MapObjectHandler moh) {
-        super(-9999,-9999);
+        super(0,0, ANT_WIDTH, ANT_HEIGHT);
         this.colony = colony;
         this.antType = type;
         this.camera = camera;
@@ -61,13 +62,17 @@ public class Ant extends MapObject {
         //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
         Vector2 pos = this.getPos();
-        Vector2 absPos = ColonyUtils.getAbsoluteCoordinates(pos);
+        Vector2 absPos = CoordinateUtils.getAbsoluteCoordinates(pos);
         Vector3 antPos = camera.project(new Vector3(absPos.x, absPos.y, 0));
         this.antBody.setTransform(absPos.x, absPos.y, this.antBody.getAngle());
 
         // Set sprite position and scale
         sprite.setPosition(antPos.x - sprite.getWidth() / 2, antPos.y - sprite.getHeight() / 2);
-        sprite.setScale(2*(ANT_WIDTH/sprite.getWidth()) / camera.zoom);
+
+        // was 16
+        int SCALE_FACTOR = MAP_TILE_PIXELS * ANT_WIDTH * TILE_CONVERSION_FACTOR;
+
+        sprite.setScale(2*(SCALE_FACTOR/sprite.getWidth()) / camera.zoom);
 
         // Set sprite rotation
         float rotation = (float) Math.toDegrees(antBody.getAngle());
@@ -92,7 +97,7 @@ public class Ant extends MapObject {
         antBody = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(ANT_WIDTH / 2f / PPM, ANT_HEIGHT / 2f / PPM);
+        shape.setAsBox((ANT_WIDTH * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS) / 2f / PPM, (ANT_HEIGHT * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS) / 2f / PPM);
 
         antBody.createFixture(shape, 1.0f);
         shape.dispose();

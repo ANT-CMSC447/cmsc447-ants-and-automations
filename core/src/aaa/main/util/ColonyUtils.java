@@ -5,8 +5,6 @@ import aaa.main.game.map.Colony;
 import aaa.main.game.map.MapObjectHandler;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -85,10 +83,10 @@ public class ColonyUtils {
 
         Vector2 pos = colony.getPos();
         System.out.println("Colony position: " + pos.x + ", " + pos.y);
-        Vector2 up = new Vector2(pos.x, pos.y + 2);
-        Vector2 down = new Vector2(pos.x, pos.y - 2);
-        Vector2 left = new Vector2(pos.x - 2, pos.y);
-        Vector2 right = new Vector2(pos.x + 2, pos.y);
+        Vector2 up = new Vector2(pos.x, pos.y + (COLONY_HEIGHT / 2) + 0.5f);
+        Vector2 down = new Vector2(pos.x, pos.y - (COLONY_HEIGHT / 2) - 0.5f);
+        Vector2 left = new Vector2(pos.x - (COLONY_WIDTH / 2) - 0.5f, pos.y);
+        Vector2 right = new Vector2(pos.x + (COLONY_WIDTH / 2) + 0.5f, pos.y);
 
         if (moh.collides(up.x, up.y)) {
             System.out.println("Collision detected: up");
@@ -159,37 +157,24 @@ public class ColonyUtils {
         System.out.println("No collision detected");
         return true;
     }
-
-    public static Vector2 getAbsoluteCoordinates(Vector2 mapCoordinates) {
-        float difference = 256f / (MAP_TILE_WIDTH * MAP_SCALE);
-//        System.out.println("Difference: " + difference);
-//        System.out.println("Map coordinates: " + mapCoordinates.x + ", " + mapCoordinates.y);
-        return new Vector2(mapCoordinates.x * difference, mapCoordinates.y * difference);
-    }
-
-    public static Vector2 getMapCoordinates(Vector2 absoluteCoordinates) {
-        float difference = (MAP_TILE_WIDTH * MAP_SCALE) / 256f;
-        return new Vector2(absoluteCoordinates.x * difference, absoluteCoordinates.y * difference);
-    }
-
-    public static boolean hasMapCollision(Body b1, Vector2 size, MapObjectHandler moh) {
-        float b1x = b1.getWorldCenter().x;
-        float b1y = b1.getWorldCenter().y;
-        float b1w = size.x;
-        float b1h = size.y;
-        float startx = b1x - b1w/2;
-        float starty = b1y - b1h/2;
-        float endx = b1x + b1w/2;
-        float endy = b1y + b1h/2;
-        for (float x = startx; x < endx; x += Constants.MAP_TILE_WIDTH) {
-            for (float y = starty; y < endy; y += Constants.MAP_TILE_WIDTH) {
-                if (moh.collides(x, y)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+//    public static boolean hasMapCollision(Body b1, Vector2 size, MapObjectHandler moh) {
+//        float b1x = b1.getWorldCenter().x;
+//        float b1y = b1.getWorldCenter().y;
+//        float b1w = size.x;
+//        float b1h = size.y;
+//        float startx = b1x - b1w/2;
+//        float starty = b1y - b1h/2;
+//        float endx = b1x + b1w/2;
+//        float endy = b1y + b1h/2;
+//        for (float x = startx; x < endx; x += Constants.MAP_TILE_PIXELS) {
+//            for (float y = starty; y < endy; y += Constants.MAP_TILE_PIXELS) {
+//                if (moh.collides(x, y)) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
     //return the half the smallest body size
     //used to iterate over an area checking for bodies

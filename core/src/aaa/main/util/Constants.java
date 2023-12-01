@@ -13,7 +13,7 @@ public final class Constants {
 
 
     //camera zoom constants
-    public static final float MAX_ZOOM = 2f;
+    public static final float MAX_ZOOM = 20f;
 
     public static final float MIN_ZOOM = 0.2f;
 
@@ -41,31 +41,40 @@ public final class Constants {
 
     //map generation
 
-    public static final float WALL_THRESHOLD = 0.4f;
+    public static final float WALL_THRESHOLD = 0.3f;
     public static final float COLONY_CANDIDATE_THRESHOLD = 0.2f;
     public static final float RESOURCE_THRESHOLD = 0.7f;
 
-    public static final int ANT_WIDTH = 16;
-    public static final int ANT_HEIGHT = 16;
+    public static final int TILE_CONVERSION_FACTOR = 1;
 
-    public static final int COLONY_WIDTH = 32;
-    public static final int COLONY_HEIGHT = 32;
+
+    // now in tiles
+
+    public static final int ANT_WIDTH = 1;
+    public static final int ANT_HEIGHT = 1;
+
+    public static final int COLONY_WIDTH = 4;
+    public static final int COLONY_HEIGHT = 4;
 
 
     // map constants
 
-    public static final int MAP_TILE_WIDTH = 8;
+    public static final int MAP_TILE_PIXELS = 8;
 
-    public static final int MAP_SCALE = 64;
+    public static final int MAP_SCALE = 32;
 
-    public static final int MAP_WIDTH = 200;
-    public static final int MAP_HEIGHT = 200;
+    // for some reason this factor changes in a way i can't actually predict whenever the map scale changes
+    // so for now - just setting this manually :)
+    public static final float MAP_DIFF = 2f;
+
+    public static final int MAP_WIDTH = 400;
+    public static final int MAP_HEIGHT = 400;
 
     public static class TileInfo {
         public TileInfo(int off_x, int off_y) {
-            this.off_x = off_x * Constants.MAP_TILE_WIDTH;
-            this.off_y = off_y * Constants.MAP_TILE_WIDTH;
-            this.size = Constants.MAP_TILE_WIDTH;
+            this.off_x = off_x * Constants.MAP_TILE_PIXELS;
+            this.off_y = off_y * Constants.MAP_TILE_PIXELS;
+            this.size = Constants.MAP_TILE_PIXELS;
         }
         public int off_x;
         public int off_y;
