@@ -55,7 +55,7 @@ public class Ant extends MapObject {
 
         createBody(world, spawnLocation);
         createType();
-
+        moh.addObject(this);
     }
 
     public void render(SpriteBatch batch) {
@@ -63,8 +63,14 @@ public class Ant extends MapObject {
         // Project colony body position to screen coordinates
         Vector2 pos = this.getPos();
         Vector2 absPos = CoordinateUtils.getAbsoluteCoordinates(pos);
-        Vector3 antPos = camera.project(new Vector3(absPos.x, absPos.y, 0));
-        this.antBody.setTransform(absPos.x, absPos.y, this.antBody.getAngle());
+        Vector2 actualPos = antBody.getPosition();
+        if (!absPos.equals(actualPos)) {
+            System.out.println("Ant position mismatch: " + absPos.x + ", " + absPos.y + " vs " + actualPos.x + ", " + actualPos.y);
+            Vector2 conv = CoordinateUtils.getMapCoordinates(actualPos);
+            this.setPosition(conv.x, conv.y);
+        }
+        Vector3 antPos = camera.project(new Vector3(actualPos.x, actualPos.y, 0));
+        this.antBody.setTransform(actualPos.x, actualPos.y, this.antBody.getAngle());
 
         // Set sprite position and scale
         sprite.setPosition(antPos.x - sprite.getWidth() / 2, antPos.y - sprite.getHeight() / 2);
@@ -89,10 +95,12 @@ public class Ant extends MapObject {
     }
 
     private Body createBody(World world, Vector3 position) {
+        Vector2 converted = CoordinateUtils.getAbsoluteCoordinates(new Vector2(position.x, position.y));
+
         BodyDef def = new BodyDef();
 
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(position.x , position.y );
+        def.position.set(converted.x , converted.y );
         def.fixedRotation = true;
         antBody = world.createBody(def);
 
