@@ -47,13 +47,14 @@ public class MapManager {
         boolean[][][] perlinMap = Perlin.generateMap(mapWidth, mapHeight, seed);
         boolean[][] perlinWallsMap = perlinMap[1];
 
+        List<Constants.TileInfo> ctl = new ArrayList<>();
+        ctl.add(Constants.TILE_LIST.get("dirt0"));
+        ctl.add(Constants.TILE_LIST.get("dirt1"));
+        ctl.add(Constants.TILE_LIST.get("dirt2"));
+        ctl.add(Constants.TILE_LIST.get("dirt3"));
+
         TiledMapTileLayer wallLayer = getLayer(
-                List.of(
-                        Constants.TILE_LIST.get("dirt0"),
-                        Constants.TILE_LIST.get("dirt1"),
-                        Constants.TILE_LIST.get("dirt2"),
-                        Constants.TILE_LIST.get("dirt3")
-                ),
+                ctl,
                 perlinWallsMap,
                 mapWidth,
                 mapHeight
