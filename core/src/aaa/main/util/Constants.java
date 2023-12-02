@@ -1,5 +1,6 @@
 package aaa.main.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public final class Constants {
@@ -81,13 +82,13 @@ public final class Constants {
         public int size;
     }
 
-    public static Map<String, TileInfo> TILE_LIST = Map.ofEntries(
-            Map.entry("none", new TileInfo(0, 0)),
-            Map.entry("debug", new TileInfo(1, 0)),
-            Map.entry("dirt0", new TileInfo(2, 0)),
-            Map.entry("dirt1", new TileInfo(3, 0)),
-            Map.entry("dirt2", new TileInfo(4, 0)),
-            Map.entry("dirt3", new TileInfo(5, 0)),
-            Map.entry("stone", new TileInfo(6, 0))
-    );
+    public static Map<String, TileInfo> TILE_LIST = new HashMap<String, TileInfo>() {{
+        put("none", new TileInfo(0, 0));
+        put("debug", new TileInfo(1, 0));
+        put("dirt0", new TileInfo(2, 0));
+        put("dirt1", new TileInfo(3, 0));
+        put("dirt2", new TileInfo(4, 0));
+        put("dirt3", new TileInfo(5, 0));
+        put("stone", new TileInfo(6, 0));
+    }};
 }
