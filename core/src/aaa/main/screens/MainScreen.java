@@ -128,10 +128,6 @@ public class MainScreen extends ScreenAdapter {
         }
         game.batch.begin();
         stage.draw();
-
-        if (game.gameState.paused) {
-            this.pauseMenu.draw(delta);
-        }
         game.batch.end();
 
         game.batch = new SpriteBatch();
@@ -143,6 +139,10 @@ public class MainScreen extends ScreenAdapter {
 
         for (Colony colony : colonies) {
             colony.render(game.batch);
+        }
+
+        if (game.gameState.paused) {
+            this.pauseMenu.draw(delta);
         }
     }
 
