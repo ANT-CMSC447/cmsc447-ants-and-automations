@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -21,10 +24,12 @@ public class PauseMenu {
     private Texture pauseTex;
     private TextureRegion pauseTexReg;
     private TextureRegionDrawable pauseTexRegDraw;
+    private Box2DDebugRenderer b2dr;
     private Table mainTable;
 
     public PauseMenu(final AntGame game) {
         this.game = game;
+        b2dr = new Box2DDebugRenderer();
         stage = new Stage();
 
         mainTable = new Table();
@@ -46,6 +51,7 @@ public class PauseMenu {
                 game.gameState.paused = false;
             }
         });
+        resumeGame.setDebug(true);
 
         TextButton saveAndExit = new TextButton("Save and Exit", game.ExitbuttonStyle);
         saveAndExit.addListener(new ClickListener() {
@@ -56,6 +62,7 @@ public class PauseMenu {
                 game.setScreen(new MenuScreen(game)); // Return to the main menu
             }
         });
+        saveAndExit.setDebug(true);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.fontColor = Color.ORANGE;
@@ -81,8 +88,9 @@ public class PauseMenu {
         Gdx.input.setInputProcessor(stage);
     }
 
-    public void draw(float delta) {
+    public void draw(float delta, World world, Matrix4 matrix) {
         stage.draw();
+        b2dr.render(world, matrix);
     }
 
     public void update() {
@@ -103,5 +111,6 @@ public class PauseMenu {
         pauseBg.dispose();
         pauseTex.dispose();
         stage.dispose();
+        b2dr.dispose();
     }
 }

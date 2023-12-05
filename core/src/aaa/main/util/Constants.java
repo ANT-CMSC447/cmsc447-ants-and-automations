@@ -14,7 +14,7 @@ public final class Constants {
 
 
     //camera zoom constants
-    public static final float MAX_ZOOM = 20f;
+    public static final float MAX_ZOOM = 3f;
 
     public static final float MIN_ZOOM = 0.2f;
 
@@ -34,6 +34,19 @@ public final class Constants {
 
     public static final float CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER = 2.5f; //best results between 2f-3f
 
+    // ai constants
+
+    public static final float ANT_RANDOM_TURN_TIME_MIN = 5f;
+    public static final float ANT_RANDOM_TURN_TIME_MAX = 10f;
+    public static final float ANT_RANDOM_TURN_RADIUS = 30f; // it's in degrees
+    public static final float ANT_RANDOM_TURN_RADIUS_MIN = 10f;
+    public static final float ANT_TURN_AROUND_AMOUNT = 20f;
+    public static final float ANT_RANDOM_WALK_MIN = 2f;
+    public static final float ANT_RANDOM_WALK_MAX = 10.0f;
+    public static final float ANT_WALK_SPEED = 10.0f;
+    public static final float ANT_TURN_SPEED = 100.0f;
+    public static final float ANT_WALK_COOLDOWN_MAX = 10f;
+    public static final float ANT_BREAK_CHANCE = 0.1f;
 
     //player movement constants
 
@@ -46,6 +59,9 @@ public final class Constants {
     public static final float WALL_THRESHOLD = 0.3f;
     public static final float COLONY_CANDIDATE_THRESHOLD = 0.2f;
     public static final float RESOURCE_THRESHOLD = 0.7f;
+    public static final int ADJUSTMENT_FACTOR_X = -4;
+    public static final int ADJUSTMENT_FACTOR_Y = -4;
+    public static final int ALIGNMENT_FACTOR = 8;
 
 
     //Ant Constants
@@ -54,6 +70,8 @@ public final class Constants {
 
     //Body sizes
     public static final int TILE_CONVERSION_FACTOR = 1;
+
+
     // now in tiles
 
     public static final int ANT_WIDTH = 1;
@@ -61,6 +79,8 @@ public final class Constants {
 
     public static final int COLONY_WIDTH = 4;
     public static final int COLONY_HEIGHT = 4;
+
+    public static final float ANT_SPAWN_PADDING = 1f;
 
     // Food Sources
 

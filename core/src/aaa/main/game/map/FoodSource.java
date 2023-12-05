@@ -21,6 +21,7 @@ public class FoodSource extends MapObject {
     private float foodRemaining;
     private Texture texture;
     private Sprite sprite;
+    private SpriteBatch batch;
     private OrthographicCamera camera;
     private Body source;
     private World world;
@@ -42,6 +43,7 @@ public class FoodSource extends MapObject {
         this.candy = type;
         this.camera = camera;
         this.world = world;
+        this.batch = new SpriteBatch();
         createTexture();
     }
 
@@ -69,7 +71,7 @@ public class FoodSource extends MapObject {
         dispose();
    }
 
-    public void render(SpriteBatch batch) {
+    public void render() {
         //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
         Vector2 absPos = CoordinateUtils.getAbsoluteCoordinates(new Vector2(this.x, this.y));
@@ -104,6 +106,7 @@ public class FoodSource extends MapObject {
 
     public void dispose() {
         texture.dispose();
+        batch.dispose();
     }
 
     /*private void createBody(World world, Vector3 position) {
