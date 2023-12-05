@@ -1,6 +1,7 @@
 package aaa.main.stages;
 
 import aaa.main.AntGame;
+import aaa.main.game.GameState;
 import aaa.main.screens.MainScreen;
 import aaa.main.screens.MenuScreen;
 import aaa.main.util.Constants;
@@ -9,40 +10,28 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PauseMenu {
     private AntGame game;
     private Stage stage;
-
     private Pixmap pauseBg;
     private Texture pauseTex;
     private TextureRegion pauseTexReg;
     private TextureRegionDrawable pauseTexRegDraw;
+    private Table mainTable;
 
     public PauseMenu(final AntGame game) {
         this.game = game;
         stage = new Stage();
-        stage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == com.badlogic.gdx.Input.Keys.ESCAPE) {
-                    System.out.println("ESC Pressed");
-                    game.gameState.paused = false;
-                }
-                return true;
-            }
-        });
 
-        Table mainTable = new Table();
+        mainTable = new Table();
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
 
@@ -62,12 +51,12 @@ public class PauseMenu {
             }
         });
 
-        TextButton exitToMenu = new TextButton("Exit to Menu", game.buttonStyle);
-        exitToMenu.addListener(new ClickListener() {
+        TextButton saveAndExit = new TextButton("Save and Exit", game.buttonStyle);
+        saveAndExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
-                game.gameState.paused = false;
-                game.setScreen(new MenuScreen(game));
+                game.saveState(); // Save the game state
+                game.setScreen(new MenuScreen(game)); // Return to the main menu
             }
         });
 
@@ -84,7 +73,7 @@ public class PauseMenu {
         verticalGroup.setPosition(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2);
         verticalGroup.addActor(pauseText);
         verticalGroup.addActor(resumeGame);
-        verticalGroup.addActor(exitToMenu);
+        verticalGroup.addActor(saveAndExit);
         mainTable.addActor(verticalGroup);
 
 //        stage.addActor(pauseText);
@@ -101,6 +90,16 @@ public class PauseMenu {
 
     public void update() {
 
+    }
+
+    public void resize(int width, int height) {
+        if (mainTable != null) {
+            // Set the position of the table manually
+            mainTable.setPosition(width / 2f - mainTable.getWidth() / 2f, height / 2f - mainTable.getHeight() / 2f);
+
+            // Update the layout
+            mainTable.invalidateHierarchy();
+        }
     }
 
     public void dispose() {

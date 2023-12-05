@@ -1,6 +1,7 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
+import aaa.main.game.GameState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -37,23 +38,27 @@ public class MenuScreen extends ScreenAdapter {
         newGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
+                game.gameState = new GameState(); // Create a new game state
                 game.setScreen(new MainScreen(game));
             }
         });
+
 
         TextButton loadGame = new TextButton("Load Game", game.buttonStyle);
         loadGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
+                game.gameState = game.loadState(); // Load the saved game state
                 game.setScreen(new MainScreen(game));
             }
         });
+
 
         TextButton exit = new TextButton("Quit", game.buttonStyle);
         exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
-                game.quit();
+                game.saveAndQuit(); // Save and quit the game
             }
         });
 
