@@ -2,6 +2,7 @@ package aaa.main.screens;
 
 import aaa.main.AntGame;
 import aaa.main.game.input.CameraInputProcessor;
+import aaa.main.game.input.MenusInputProcessor;
 import aaa.main.game.input.PlayerInputProcessor;
 import aaa.main.game.map.Colony;
 import aaa.main.game.map.MapManager;
@@ -47,6 +48,8 @@ public class MainScreen extends ScreenAdapter {
     public OrthographicCamera camera;
     CameraInputProcessor cameraInputProcessor;
     PlayerInputProcessor playerInputProcessor;
+
+    MenusInputProcessor menusInputProcessor;
     InputMultiplexer inputMultiplexer;
 
     //List for storing all colonies
@@ -85,29 +88,22 @@ public class MainScreen extends ScreenAdapter {
         }
 
         playerInputProcessor = new PlayerInputProcessor(player);
+        menusInputProcessor = new MenusInputProcessor(game.gameState);
 
         inputMultiplexer.addProcessor(playerInputProcessor);
         inputMultiplexer.addProcessor(cameraInputProcessor);
+        inputMultiplexer.addProcessor(menusInputProcessor);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         //set camera position to the center of the box
         camera.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 
-        stage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent ev, int keycode) {
-                if (keycode == com.badlogic.gdx.Input.Keys.ESCAPE) {
-                    game.gameState.paused = true;
-                }
-                return true;
-            }
-        });
         pauseMenu = new PauseMenu(game);
     }
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -185,6 +181,13 @@ public class MainScreen extends ScreenAdapter {
         inputUpdate(delta);
         cameraUpdate(delta);
 
+        // temporary (proven works)
+//        int dummyNumber = game.gameState.currentGame.getDummyNumber() + 1;
+//        System.out.println(dummyNumber);
+//        if (dummyNumber > 100) {
+//            dummyNumber = 0;
+//        }
+//        game.gameState.currentGame.setDummyNumber(dummyNumber);
     }
 
     public void inputUpdate(float delta) {
