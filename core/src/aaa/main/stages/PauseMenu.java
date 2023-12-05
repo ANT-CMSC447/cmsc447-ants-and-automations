@@ -1,8 +1,6 @@
 package aaa.main.stages;
 
 import aaa.main.AntGame;
-import aaa.main.game.GameState;
-import aaa.main.screens.MainScreen;
 import aaa.main.screens.MenuScreen;
 import aaa.main.util.Constants;
 import com.badlogic.gdx.Gdx;
@@ -10,9 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -56,6 +52,7 @@ public class PauseMenu {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
                 game.saveState(); // Save the game state
+                game.gameState.paused = false; // The game should not be paused on next load
                 game.setScreen(new MenuScreen(game)); // Return to the main menu
             }
         });
