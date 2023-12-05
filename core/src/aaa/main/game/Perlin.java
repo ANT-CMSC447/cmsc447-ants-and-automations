@@ -14,20 +14,14 @@ public class Perlin {
         // to a tile with a wall.
 
 	public static boolean[][][] generateMap(int width, int height, long seed) {
-		
-		double[][] wall_array;
-		double[][] resource_array;
 
 		boolean[][][] map = new boolean[3][width][height];
 
 		double xoff_set = 0;
 		double yoff_set = 0;
 
-		wall_array = new double[width][height];
-		resource_array = new double[width][height];
 
-
-                // setting the seed
+		// setting the seed
                 OpenSimplexNoiseKS osnoise;
                 osnoise = new OpenSimplexNoiseKS(seed);
 

@@ -26,6 +26,7 @@ public class Colony extends MapObject {
     private float health;
 
     private int antsAlive;
+    private SpriteBatch batch;
 
     private Texture texture, hTexture;
 
@@ -55,6 +56,7 @@ public class Colony extends MapObject {
         health=cHealth;
         antsAlive=ants;
         colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,COLONY_HEIGHT * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,true, world);
+        batch = new SpriteBatch();
         texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
         hTexture = new Texture(Gdx.files.internal("colony_highlight.png"));
         sprite = new Sprite(texture);
@@ -102,7 +104,7 @@ public class Colony extends MapObject {
     }
 
     //Render method for drawing colony sprite
-    public void render(SpriteBatch batch) {
+    public void render() {
          //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
 //        Vector3 colonyPos = camera.project(new Vector3(colony.getPosition().x, colony.getPosition().y, 0));
@@ -148,6 +150,7 @@ public class Colony extends MapObject {
         for (Ant ant : antList) {
             ant.dispose();
         }
+        batch.dispose();
         texture.dispose();
     }
 

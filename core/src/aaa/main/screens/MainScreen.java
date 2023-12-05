@@ -7,7 +7,6 @@ import aaa.main.game.input.PlayerInputProcessor;
 import aaa.main.game.input.CameraInputProcessor;
 import aaa.main.game.input.MenusInputProcessor;
 import aaa.main.game.map.MapManager;
-import aaa.main.game.map.MapObject;
 import aaa.main.game.map.MapObjectHandler;
 import aaa.main.stages.PauseMenu;
 import aaa.main.stages.PurchaseMenu;
@@ -19,7 +18,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
@@ -68,7 +67,6 @@ public class MainScreen extends ScreenAdapter {
 
         this.game = game;
         mapManager = new MapManager();
-        mapManager.setup(game.batch, 0, 10, 30, 5);
         stage = new Stage();
 
         //Camera initilization
@@ -79,7 +77,11 @@ public class MainScreen extends ScreenAdapter {
 
         //World/debug renderer initialization
         world = new World(new Vector2(0, 0), false);
+        mapManager.setup(game.batch, world, 0, 1, 30, 5);
         b2dr = new Box2DDebugRenderer();
+        b2dr.setDrawBodies(true);
+        b2dr.setDrawVelocities(true);
+        b2dr.setDrawJoints(true);
 
         player = RenderUtils.createBox(0,0,32,32,true, world);
 
@@ -91,6 +93,7 @@ public class MainScreen extends ScreenAdapter {
 
         moh = new MapObjectHandler(mapManager.getMap(), this);
         moh.setup();
+        world.setContactListener(moh);
 
         for (Colony c : colonies) {
             ColonyUtils.addAnt(c, "Worker", camera, world, moh);
@@ -127,6 +130,8 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        Matrix4 originalProjection = game.batch.getProjectionMatrix();
+//        Matrix4 originalTransform = game.batch.getTransformMatrix();
         update(Gdx.graphics.getDeltaTime());
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -156,7 +161,12 @@ public class MainScreen extends ScreenAdapter {
         stage.draw();
         game.batch.end();
 
-        game.batch = new SpriteBatch();
+        // this will fix it. trust
+        // it didnt. it's so joever
+//        game.batch.setProjectionMatrix(new Matrix4());
+
+        game.batch.setProjectionMatrix(originalProjection);
+//        game.batch.setTransformMatrix(originalTransform);
 
         mapManager.render(camera);
 
@@ -164,18 +174,18 @@ public class MainScreen extends ScreenAdapter {
         b2dr.render(world, camera.combined.scl(PPM));
 
         for (FoodSource basicFood : forage) {
-            basicFood.render(game.batch);
+            basicFood.render();
         }
         for (FoodSource candyFood : candy) {
-            candyFood.render(game.batch);
+            candyFood.render();
         }
 
         for (Colony colony : colonies) {
-            colony.render(game.batch);
+            colony.render();
         }
 
         if (game.gameState.paused) {
-            this.pauseMenu.draw(delta);
+            this.pauseMenu.draw(delta, world, camera.combined.scl(PPM));
         }
 
         if (game.gameState.purchaseMenuOpen) {
@@ -185,6 +195,7 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height);
         camera.viewportHeight = height / SCALE;
         camera.viewportWidth = width / SCALE;
         camera.update();
@@ -220,6 +231,8 @@ public class MainScreen extends ScreenAdapter {
     //Non tick based renderings
     public void update(float delta) {
         world.step(1/60f, 6, 2);
+        moh.handleAI(delta);
+        moh.update(delta);
         inputUpdate(delta);
         cameraUpdate(delta);
 

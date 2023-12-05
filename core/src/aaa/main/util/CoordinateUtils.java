@@ -7,14 +7,14 @@ import static aaa.main.util.Constants.MAP_HEIGHT;
 
 public class CoordinateUtils {
     public static Vector2 getAbsoluteCoordinates(Vector2 mapCoordinates) {
-        float difference = MAP_DIFF / (MAP_TILE_PIXELS);
+        float difference = MAP_DIFF / (float) MAP_TILE_PIXELS;
 //        System.out.println("Difference: " + difference);
 //        System.out.println("Map coordinates: " + mapCoordinates.x + ", " + mapCoordinates.y);
         return new Vector2(mapCoordinates.x * difference, mapCoordinates.y * difference);
     }
 
     public static Vector2 getMapCoordinates(Vector2 absoluteCoordinates) {
-        float difference = (MAP_TILE_PIXELS) / MAP_DIFF;
+        float difference = (float) MAP_TILE_PIXELS / MAP_DIFF;
         return new Vector2(absoluteCoordinates.x * difference, absoluteCoordinates.y * difference);
     }
 

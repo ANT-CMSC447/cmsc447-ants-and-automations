@@ -44,9 +44,9 @@ public class PlayerInputProcessor implements InputProcessor {
 
         player.setLinearVelocity(horizontalVelocity, verticalVelocity);
         Vector2 ppos = player.getPosition();
-        System.out.println("ppos: " + ppos.x + ", " + ppos.y);
+//        System.out.println("ppos: " + ppos.x + ", " + ppos.y);
         Vector2 mpos = CoordinateUtils.getMapCoordinates(ppos);
-        System.out.println("mpos: " + mpos.x + ", " + mpos.y);
+//        System.out.println("mpos: " + mpos.x + ", " + mpos.y);
         return false;
     }
 

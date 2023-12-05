@@ -83,27 +83,27 @@ public class ColonyUtils {
 
         Vector2 pos = colony.getPos();
         System.out.println("Colony position: " + pos.x + ", " + pos.y);
-        Vector2 up = new Vector2(pos.x, pos.y + (COLONY_HEIGHT / 2) + 0.5f);
-        Vector2 down = new Vector2(pos.x, pos.y - (COLONY_HEIGHT / 2) - 0.5f);
-        Vector2 left = new Vector2(pos.x - (COLONY_WIDTH / 2) - 0.5f, pos.y);
-        Vector2 right = new Vector2(pos.x + (COLONY_WIDTH / 2) + 0.5f, pos.y);
+        Vector2 up = new Vector2(pos.x, pos.y + (COLONY_HEIGHT / 2) + ANT_SPAWN_PADDING);
+        Vector2 down = new Vector2(pos.x, pos.y - (COLONY_HEIGHT / 2) - ANT_SPAWN_PADDING);
+        Vector2 left = new Vector2(pos.x - (COLONY_WIDTH / 2) - ANT_SPAWN_PADDING, pos.y);
+        Vector2 right = new Vector2(pos.x + (COLONY_WIDTH / 2) + ANT_SPAWN_PADDING, pos.y);
 
-        if (moh.collides(up.x, up.y)) {
+        if (moh.collides(up.x, up.y, ANT_WIDTH, ANT_HEIGHT)) {
             System.out.println("Collision detected: up");
         } else {
             return new Vector3(up.x, up.y, 0);
         }
-        if (moh.collides(down.x, down.y)) {
+        if (moh.collides(down.x, down.y, ANT_WIDTH, ANT_HEIGHT)) {
             System.out.println("Collision detected: down");
         } else {
             return new Vector3(down.x, down.y, 0);
         }
-        if (moh.collides(left.x, left.y)) {
+        if (moh.collides(left.x, left.y, ANT_WIDTH, ANT_HEIGHT)) {
             System.out.println("Collision detected: left");
         } else {
             return new Vector3(left.x, left.y, 0);
         }
-        if (moh.collides(right.x, right.y)) {
+        if (moh.collides(right.x, right.y, ANT_WIDTH, ANT_HEIGHT)) {
             System.out.println("Collision detected: right");
         } else {
             return new Vector3(right.x, right.y, 0);
