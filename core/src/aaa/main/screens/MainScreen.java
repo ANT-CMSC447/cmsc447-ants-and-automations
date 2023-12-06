@@ -40,7 +40,7 @@ public class MainScreen extends ScreenAdapter {
 
     private MapManager mapManager;
     private MapObjectHandler moh;
-    private Body player;
+    public Body player;
     private final float SCALE = 2.0f;
 
     boolean cameraLock = false;
@@ -73,7 +73,9 @@ public class MainScreen extends ScreenAdapter {
         world = new World(new Vector2(0, 0), false);
         b2dr = new Box2DDebugRenderer();
 
-        player = RenderUtils.createBox(0,0,32,32,false, world);
+        player = RenderUtils.createBox(0,0,32,32,true, world);
+
+        cameraInputProcessor.selectedObject = player;
 
 
         //Colony creation testing
@@ -87,8 +89,16 @@ public class MainScreen extends ScreenAdapter {
             ColonyUtils.addAnt(c, "Worker", camera, world, moh);
         }
 
-        playerInputProcessor = new PlayerInputProcessor(player);
+
+        //print all colonies and their world positions
+        for (Colony c : colonies) {
+            System.out.println("Colony " + c.getName() + " at " + c.getColonyBody().getPosition().x*PPM + ", " + c.getColonyBody().getPosition().y*PPM );
+        }
+
+        //this will eventually be removed
+        setPlayerInputProcessor(player);
         menusInputProcessor = new MenusInputProcessor(game.gameState);
+
 
         inputMultiplexer.addProcessor(playerInputProcessor);
         inputMultiplexer.addProcessor(cameraInputProcessor);
@@ -234,6 +244,12 @@ public class MainScreen extends ScreenAdapter {
             cameraInputProcessor.keyDown2(Input.Keys.DOWN, CAMERA_DIAGONAL_MOVE_SPEED_MODIFIER);
         }
 
+        //if c is pressed, lock camera to selected object
+        if (Gdx.input.isKeyPressed(Input.Keys.C) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.C)) {
+            cameraInputProcessor.keyDown(Input.Keys.C);
+            setCameraLock(false);
+        }
+
         //Player inputs
         if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) {
             playerInputProcessor.keyDown(Input.Keys.A);
@@ -259,11 +275,18 @@ public class MainScreen extends ScreenAdapter {
             playerInputProcessor.keyDown2(Input.Keys.D, Input.Keys.S, PLAYER_DIAGONAL_MOVE_SPEED_MODIFIER);
         }
 
+        //if mouse is clicked call camerainputprocessor touchdown with click position
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            cameraInputProcessor.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0, this);
+        }
+
         //reset player velocity if no keys are pressed
         if (!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) &&
                 !Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.S)) {
             player.setLinearVelocity(0, 0);
         }
+
+
 
 
 
@@ -280,6 +303,20 @@ public class MainScreen extends ScreenAdapter {
 
     public void setCameraLock(boolean val) {
         this.cameraLock = val;
+    }
+
+    public void setPlayerInputProcessor(Body body) {
+        this.playerInputProcessor = new PlayerInputProcessor(body);
+    }
+
+    public void focusCameraOnColony(Body colony) {
+        player = colony;
+        camera.position.set(colony.getPosition().x * PPM, colony.getPosition().y * PPM, 0);
+    }
+
+    public void focusCameraOnAnt(Body ant) {
+        player = ant;
+        camera.position.set(ant.getPosition().x * PPM, ant.getPosition().y * PPM, 0);
     }
 
 }

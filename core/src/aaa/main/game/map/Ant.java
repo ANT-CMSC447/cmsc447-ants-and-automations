@@ -131,5 +131,40 @@ public class Ant extends MapObject {
         sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
     }
 
+    public Body getAntBody() {
+        return antBody;
+    }
+
+    public String getName() {
+        return antType;
+    }
+
+    public void setName(String newName) {
+        antType = newName;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int newHealth) {
+        health = newHealth;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int newAttack) {
+        attack = newAttack;
+    }
+
+    public Colony getColony() {
+        return colony;
+    }
+
+    public void setColony(Colony newColony) {
+        colony = newColony;
+    }
 
 }
