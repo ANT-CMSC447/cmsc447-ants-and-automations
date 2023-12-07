@@ -46,9 +46,13 @@ public final class Constants {
     public static final float COLONY_CANDIDATE_THRESHOLD = 0.2f;
     public static final float RESOURCE_THRESHOLD = 0.7f;
 
+
+    //Ant Constants
+    public static final String WORKER_ANT = "Worker";
+    public static final String SOLDIER_ANT = "Soldier";
+
+    //Body sizes
     public static final int TILE_CONVERSION_FACTOR = 1;
-
-
     // now in tiles
 
     public static final int ANT_WIDTH = 1;
@@ -56,6 +60,16 @@ public final class Constants {
 
     public static final int COLONY_WIDTH = 4;
     public static final int COLONY_HEIGHT = 4;
+
+    // Food Sources
+
+    public static final String CANDY_FOOD = "candy";
+    public static final float CANDY_START = 120f;
+    public static final int CANDY_SIZE = 6;
+    public static final float CANDY_THRESHOLD = 0.7f;
+    public static final float FORAGE_START = 30f;
+    public static final int FORAGE_SIZE = 4;
+
 
 
     // map constants

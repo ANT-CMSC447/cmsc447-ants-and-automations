@@ -25,10 +25,12 @@ public class Ant extends MapObject {
     private String antType;
     private Colony colony;
     private Body antBody;
+    private float antResources;
     private boolean playerOwned;
     private Texture texture;
     private Sprite sprite;
     private OrthographicCamera camera;
+    private World world;
 
     float x;
     float y;
@@ -37,6 +39,8 @@ public class Ant extends MapObject {
         this.colony = colony;
         this.antType = type;
         this.camera = camera;
+        this.world = world;
+        antResources=0f;
 
         //calls CreateBody, which will get the spawn location from ColonyUtils.getAntSpawn
         //then will create the body in the world (shouldn't need to render), and then apply a sprite on top of it.
@@ -57,7 +61,6 @@ public class Ant extends MapObject {
         createType();
         moh.addObject(this);
     }
-
     public void render(SpriteBatch batch) {
         //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
@@ -141,6 +144,10 @@ public class Ant extends MapObject {
 
     public void setName(String newName) {
         antType = newName;
+    }
+
+    public void incResources(float amount) {
+        antResources+=amount;
     }
 
     public int getHealth() {

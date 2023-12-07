@@ -3,6 +3,7 @@ package aaa.main.game.map;
 import aaa.main.screens.MainScreen;
 import aaa.main.util.ColonyUtils;
 import aaa.main.util.CoordinateUtils;
+import aaa.main.util.FoodSourceUtils;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
@@ -45,6 +46,43 @@ public class MapObjectHandler {
                 }
             }
         }
+
+        layer = (TiledMapTileLayer) this.map.getLayers().get(3);
+        for (int x = 0; x < layer.getWidth(); x++) {
+            for (int y = 0; y < layer.getHeight(); y++) {
+                if (layer.getCell(x, y) != null) {
+                    Vector2 coords = CoordinateUtils.getMapCoordinatesFromTileMapOffset(new Vector2(x, y));
+                    System.out.println(
+                            "Cell at " + x + ", " + y + " is not null, offset: " + coords.x + ", " + coords.y);
+                    MapObject o = FoodSourceUtils.createFoodSource(
+                            false,
+                            coords.x,
+                            coords.y,
+                            screen
+                    );
+                    objects.add(o);
+                }
+            }
+        }
+
+        layer = (TiledMapTileLayer) this.map.getLayers().get(4);
+        for (int x = 0; x < layer.getWidth(); x++) {
+            for (int y = 0; y < layer.getHeight(); y++) {
+                if (layer.getCell(x, y) != null) {
+                    Vector2 coords = CoordinateUtils.getMapCoordinatesFromTileMapOffset(new Vector2(x, y));
+                    System.out.println(
+                            "Cell at " + x + ", " + y + " is not null, offset: " + coords.x + ", " + coords.y);
+                    MapObject o = FoodSourceUtils.createFoodSource(
+                            true,
+                            coords.x,
+                            coords.y,
+                            screen
+                    );
+                    objects.add(o);
+                }
+            }
+        }
+
     }
 
     public void addObject(MapObject o) {

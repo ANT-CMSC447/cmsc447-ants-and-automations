@@ -1,10 +1,11 @@
 package aaa.main.screens;
 
 import aaa.main.AntGame;
+import aaa.main.game.map.Colony;
+import aaa.main.game.map.FoodSource;
+import aaa.main.game.input.PlayerInputProcessor;
 import aaa.main.game.input.CameraInputProcessor;
 import aaa.main.game.input.MenusInputProcessor;
-import aaa.main.game.input.PlayerInputProcessor;
-import aaa.main.game.map.Colony;
 import aaa.main.game.map.MapManager;
 import aaa.main.game.map.MapObjectHandler;
 import aaa.main.stages.PauseMenu;
@@ -20,8 +21,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
@@ -51,6 +50,8 @@ public class MainScreen extends ScreenAdapter {
 
     MenusInputProcessor menusInputProcessor;
     InputMultiplexer inputMultiplexer;
+    public ArrayList<FoodSource> forage = new ArrayList<FoodSource>();
+    public ArrayList<FoodSource> candy = new ArrayList<FoodSource>();
 
     //List for storing all colonies
     public ArrayList<Colony> colonies = new ArrayList<Colony>();
@@ -60,7 +61,7 @@ public class MainScreen extends ScreenAdapter {
 
         this.game = game;
         mapManager = new MapManager();
-        mapManager.setup(game.batch, 0, 3);
+        mapManager.setup(game.batch, 0, 10, 30, 5);
         stage = new Stage();
 
         //Camera initilization
@@ -123,7 +124,9 @@ public class MainScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        cameraUpdate(delta);
         game.batch.setProjectionMatrix(camera.combined);
+
 
         if (game.gameState.paused && !pauseOpened) {
             pauseMenu.setInput();
@@ -142,6 +145,13 @@ public class MainScreen extends ScreenAdapter {
 
         //for future use when debugging is needed
         b2dr.render(world, camera.combined.scl(PPM));
+
+        for (FoodSource basicFood : forage) {
+            basicFood.render(game.batch);
+        }
+        for (FoodSource candyFood : candy) {
+            candyFood.render(game.batch);
+        }
 
         for (Colony colony : colonies) {
             colony.render(game.batch);
