@@ -126,7 +126,6 @@ public class Colony extends MapObject {
         sprite.draw(batch);
         batch.end();
 
-        batch = new SpriteBatch();
 
         for (Ant ant : antList) {
             ant.render(batch);
