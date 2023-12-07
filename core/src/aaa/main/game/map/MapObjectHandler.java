@@ -1,5 +1,7 @@
 package aaa.main.game.map;
 
+import aaa.main.game.state.ColonyInfo;
+import aaa.main.game.state.GameState;
 import aaa.main.screens.MainScreen;
 import aaa.main.util.ColonyUtils;
 import aaa.main.util.CoordinateUtils;
@@ -40,7 +42,7 @@ public class MapObjectHandler implements ContactListener {
         }
     }
 
-    public void setup() {
+    public void setup(GameState state) {
         int colonyCount = 0;
         TiledMapTileLayer layer = (TiledMapTileLayer) this.map.getLayers().get(2);
         for (int x = 0; x < layer.getWidth(); x++) {
@@ -49,17 +51,33 @@ public class MapObjectHandler implements ContactListener {
                     Vector2 coords = CoordinateUtils.getMapCoordinatesFromTileMapOffset(new Vector2(x, y));
                     System.out.println(
                             "Cell at " + x + ", " + y + " is not null, offset: " + coords.x + ", " + coords.y);
-                    MapObject o = ColonyUtils.createColony(
-                            "test" + (colonyCount++),
-                            false,
-                            100,
-                            100,
-                            10,
-                            coords.x,
-                            coords.y,
-                            screen
-                    );
-                    objects.add(o);
+                    if (state.currentGame.colonies.containsKey(coords)) {
+                        ColonyInfo ci = state.currentGame.colonies.get(coords);
+                        colonyCount++;
+                        MapObject o = ColonyUtils.createColony(
+                                ci.name,
+                                false,
+                                ci.resources,
+                                ci.health,
+                                ci.ants.size(),
+                                coords.x,
+                                coords.y,
+                                screen
+                        );
+                        objects.add(o);
+                    } else {
+                        MapObject o = ColonyUtils.createColony(
+                                "test" + (colonyCount++),
+                                false,
+                                100,
+                                100,
+                                10,
+                                coords.x,
+                                coords.y,
+                                screen
+                        );
+                        objects.add(o);
+                    }
                 }
             }
         }

@@ -1,13 +1,16 @@
 package aaa.main.game.state;
 
+import java.util.HashMap;
+import java.util.Random;
+
 public class GameState {
     public GameState() {
         this.currentGame = new SerializableGameState();
         /*
          * VV THESE ARE DEFAULT VALUES VV
          */
-        this.currentGame.dummyVariable = true;
-        this.currentGame.dummyNumber = 42;
+        this.currentGame.colonies = new HashMap<>();
+        this.currentGame.seed = new Random().nextLong();
         /*
          * ^^ SET HERE ^^
          */

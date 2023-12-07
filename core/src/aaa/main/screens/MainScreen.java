@@ -77,11 +77,11 @@ public class MainScreen extends ScreenAdapter {
 
         //World/debug renderer initialization
         world = new World(new Vector2(0, 0), false);
-        mapManager.setup(game.batch, world, 0, 1, 30, 5);
+        mapManager.setup(game.batch, world, game.gameState.currentGame.seed, GLOBAL_MAX_COLONY, 30, 5);
         b2dr = new Box2DDebugRenderer();
-        b2dr.setDrawBodies(true);
-        b2dr.setDrawVelocities(true);
-        b2dr.setDrawJoints(true);
+        b2dr.setDrawBodies(false);
+        b2dr.setDrawVelocities(false);
+        b2dr.setDrawJoints(false);
 
         player = RenderUtils.createBox(0,0,32,32,true, world);
 
@@ -92,7 +92,7 @@ public class MainScreen extends ScreenAdapter {
 //        ColonyUtils.createColony("test1", false, 100, 100, 10,  1, 1, camera,this);
 
         moh = new MapObjectHandler(mapManager.getMap(), this);
-        moh.setup();
+        moh.setup(game.gameState);
         world.setContactListener(moh);
 
         for (Colony c : colonies) {
@@ -181,7 +181,7 @@ public class MainScreen extends ScreenAdapter {
         }
 
         for (Colony colony : colonies) {
-            colony.render();
+            colony.render(game.gameState);
         }
 
         if (game.gameState.paused) {
