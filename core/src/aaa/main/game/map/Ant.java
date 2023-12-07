@@ -128,6 +128,14 @@ public class Ant extends MapObject {
         batch.end();
     }
 
+    public void setAntResources(float resources) {
+        this.antResources = resources;
+    }
+
+    public float getAntResources() {
+        return this.antResources;
+    }
+
     public void dispose() {
         texture.dispose();
     }

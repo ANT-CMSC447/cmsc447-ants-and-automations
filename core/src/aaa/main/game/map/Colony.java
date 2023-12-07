@@ -1,5 +1,8 @@
 package aaa.main.game.map;
 
+import aaa.main.game.state.AntInfo;
+import aaa.main.game.state.ColonyInfo;
+import aaa.main.game.state.GameState;
 import aaa.main.util.ColonyUtils;
 import aaa.main.util.CoordinateUtils;
 import aaa.main.util.RenderUtils;
@@ -14,6 +17,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static aaa.main.util.Constants.*;
 
@@ -46,6 +51,8 @@ public class Colony extends MapObject {
     float x;
     float y;
 
+    private Map<Vector2, AntInfo> antInfo;
+
     // Constructor
     public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, OrthographicCamera cCamera, World world) {
         super(x, y, COLONY_WIDTH, COLONY_HEIGHT);
@@ -55,6 +62,44 @@ public class Colony extends MapObject {
         resources=cResources;
         health=cHealth;
         antsAlive=ants;
+        colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,COLONY_HEIGHT * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,true, world);
+        batch = new SpriteBatch();
+        texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
+        hTexture = new Texture(Gdx.files.internal("colony_highlight.png"));
+        sprite = new Sprite(texture);
+        hSprite = new Sprite(hTexture);
+        camera = cCamera;
+        this.world = world;
+        this.x = x;
+        this.y = y;
+        this.antInfo = new HashMap<>();
+        Vector2 transform = CoordinateUtils.getAbsoluteCoordinates(new Vector2(x, y));
+        colonyBody.setTransform(transform, colonyBody.getAngle());
+
+        //set sprite to center on body
+        sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
+        //set position of sprite to position of body
+        sprite.setPosition(colonyBody.getPosition().x, colonyBody.getPosition().y);
+
+        /*for (int i = 0; i < ants; i++) {
+            if (antsAlive < MAX_ANTS) {
+                antArray[i] = createAnt(colony.getPosition().x, colony.getPosition().y);
+                antsAlive++;
+            }
+        }
+        * */
+    }
+
+    // we are reloading a saved game
+    public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, Map<Vector2, AntInfo> antInfo, OrthographicCamera cCamera, World world) {
+        super(x, y, COLONY_WIDTH, COLONY_HEIGHT);
+        isSelected = false;
+        playerOwned = isPlayer;
+        cName = name;
+        resources=cResources;
+        health=cHealth;
+        antsAlive=ants;
+        this.antInfo = antInfo;
         colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,COLONY_HEIGHT * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,true, world);
         batch = new SpriteBatch();
         texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
@@ -104,7 +149,7 @@ public class Colony extends MapObject {
     }
 
     //Render method for drawing colony sprite
-    public void render() {
+    public void render(GameState state) {
          //first we position and rotate the sprite correctly
         // Project colony body position to screen coordinates
 //        Vector3 colonyPos = camera.project(new Vector3(colony.getPosition().x, colony.getPosition().y, 0));
@@ -129,6 +174,11 @@ public class Colony extends MapObject {
         float rotation = (float) Math.toDegrees(colonyBody.getAngle());
         sprite.setRotation(rotation);
         hSprite.setRotation(rotation);
+
+        if (!state.currentGame.colonies.containsKey(new Vector2(this.x, this.y))) {
+            state.currentGame.colonies.put(new Vector2(this.x, this.y), new ColonyInfo());
+        }
+//        state.currentGame.colonies.get(new Vector2(this.x, this.y))
 
         // Draw the sprite
         batch.begin();

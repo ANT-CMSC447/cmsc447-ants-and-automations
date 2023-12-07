@@ -3,6 +3,7 @@ package aaa.main.util;
 import aaa.main.game.map.Ant;
 import aaa.main.game.map.Colony;
 import aaa.main.game.map.MapObjectHandler;
+import aaa.main.game.state.AntInfo;
 import aaa.main.screens.MainScreen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 
 import static aaa.main.util.Constants.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 //utility for accessing colonies from the master ArrayList in MainScreen
 public class ColonyUtils {
@@ -23,6 +25,12 @@ public class ColonyUtils {
     //createColony("Colony 1", false, 100, 100, 10, colonyBody, camera, screen);
     public static Colony createColony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, MainScreen screen) {
         Colony colony = new Colony(name, isPlayer, cResources, cHealth, ants, x, y, screen.camera, screen.world);
+        addColony(colony, screen);
+        return colony;
+    }
+
+    public static Colony createColony(String name, boolean isPlayer, float cResources, float cHealth, Map<Vector2, AntInfo> ants, float x, float y, MainScreen screen) {
+        Colony colony = new Colony(name, isPlayer, cResources, cHealth, ants.size(), x, y, ants, screen.camera, screen.world);
         addColony(colony, screen);
         return colony;
     }
