@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Constants {
+
+    //Colony update interval in seconds
+    public static final int COLONY_UPDATE_INTERVAL = 5;
+
     //PPM = Pixels Per Meter, since Box2D uses meters, and we use pixels (for scaling)
     public static final float PPM = 32;
     public static final int BORDER_WIDTH = 200;
@@ -28,6 +32,11 @@ public final class Constants {
     public static final int GLOBAL_MAX_COLONY = 5;
     public static final float COST_PER_ANT = 25f;
     public static final String COLONY_TEXTURE_FILE = "col_nest.png";
+
+    //happens every 5 seconds
+    public static final float COLONY_RESOURCE_CONSUMPTION_LOSS = 1f;
+
+    public static final float COLONY_STARVATION_HEALTH_LOSS = 1f;
 
     //camera movement constants
     public static final float CAMERA_MOVE_SPEED = 8; //number is in pixels

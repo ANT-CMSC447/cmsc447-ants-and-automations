@@ -165,4 +165,18 @@ public class Colony extends MapObject {
     //probably also an overloaded
     //public Ant createAnt(float x, float y) {this(x,y,ANT)}
 
+    //colonys use resources over time to stay alive
+    public void consumeResources(float amount) {
+        if (resources >= amount) {
+            resources -= amount;
+        } else {
+            resources = 0;
+        }
+    }
+
+    //decrease colony health by some margin
+    public void decreaseHealth(float amount) {
+        health -= amount;
+    }
+
 }

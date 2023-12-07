@@ -47,6 +47,8 @@ public class MainScreen extends ScreenAdapter {
     public Body player;
     private final float SCALE = 2.0f;
 
+    private float time = 0;
+
     boolean cameraLock = false;
 
     public OrthographicCamera camera;
@@ -221,6 +223,20 @@ public class MainScreen extends ScreenAdapter {
         inputUpdate(delta);
         cameraUpdate(delta);
 
+        //Update colony stuff
+        //change constants for health and recourses consumption rate
+        //make to so colony update happens every 5 seconds
+        time += delta;
+        if (time > COLONY_UPDATE_INTERVAL) {
+            updateColony(delta);
+            System.out.println("Colony updated");
+            time = 0;
+        }
+        isGameOver(this);
+        //updateColony(delta);
+        //isGameOver(this);
+
+
         // temporary (proven works)
 //        int dummyNumber = game.gameState.currentGame.getDummyNumber() + 1;
 //        System.out.println(dummyNumber);
@@ -365,4 +381,33 @@ public class MainScreen extends ScreenAdapter {
         return moh;
     }
 
+
+    //check if the game is over, game is over when the player owned colony as 0 resources and 0 ants, or the player colony has 0 health
+    public static boolean isGameOver(MainScreen screen) {
+        for (Colony colony : screen.colonies) {
+            if (colony.isPlayerOwned()) {
+                if (colony.getResources() <= 0 && colony.getAntsAlive() <= 0) {
+                    System.out.println("Game over!");
+                    return true;
+                }
+                if (colony.getHealth() <= 0) {
+                    System.out.println("Game over!");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //update colony (per tick)
+    public void updateColony(float delta) {
+        for (Colony colony : colonies) {
+            colony.consumeResources(COLONY_RESOURCE_CONSUMPTION_LOSS);
+            System.out.println("Colony " + colony.getName() + " has " + colony.getResources() + " resources");
+            if (colony.getResources() <= 0) {
+                colony.decreaseHealth(COLONY_STARVATION_HEALTH_LOSS);
+                System.out.println("Colony " + colony.getName() + " is starving!");
+            }
+        }
+    }
 }
