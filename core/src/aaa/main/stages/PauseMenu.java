@@ -47,7 +47,7 @@ public class PauseMenu {
             }
         });
 
-        TextButton saveAndExit = new TextButton("Save and Exit", game.buttonStyle);
+        TextButton saveAndExit = new TextButton("Save and Exit", game.ExitbuttonStyle);
         saveAndExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {

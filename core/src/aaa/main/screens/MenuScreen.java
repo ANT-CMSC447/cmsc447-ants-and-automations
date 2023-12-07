@@ -52,7 +52,7 @@ public class MenuScreen extends ScreenAdapter {
         });
 
 
-        TextButton exit = new TextButton("Quit", game.buttonStyle);
+        TextButton exit = new TextButton("Quit", game.ExitbuttonStyle);
         exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {

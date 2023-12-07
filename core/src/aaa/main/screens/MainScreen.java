@@ -7,8 +7,10 @@ import aaa.main.game.input.PlayerInputProcessor;
 import aaa.main.game.input.CameraInputProcessor;
 import aaa.main.game.input.MenusInputProcessor;
 import aaa.main.game.map.MapManager;
+import aaa.main.game.map.MapObject;
 import aaa.main.game.map.MapObjectHandler;
 import aaa.main.stages.PauseMenu;
+import aaa.main.stages.PurchaseMenu;
 import aaa.main.util.ColonyUtils;
 import aaa.main.util.RenderUtils;
 import com.badlogic.gdx.Gdx;
@@ -30,8 +32,11 @@ import static aaa.main.util.Constants.*;
 public class MainScreen extends ScreenAdapter {
     private final AntGame game;
     private final PauseMenu pauseMenu;
+
+    private final PurchaseMenu purchaseMenu;
     private final Stage stage;
     private boolean pauseOpened = false;
+    public boolean purchaseOpened = false;
 
     private boolean DEBUG = false;
     private Box2DDebugRenderer b2dr;
@@ -98,7 +103,7 @@ public class MainScreen extends ScreenAdapter {
 
         //this will eventually be removed
         setPlayerInputProcessor(player);
-        menusInputProcessor = new MenusInputProcessor(game.gameState);
+        menusInputProcessor = new MenusInputProcessor(game.gameState, this);
 
 
         inputMultiplexer.addProcessor(playerInputProcessor);
@@ -110,6 +115,7 @@ public class MainScreen extends ScreenAdapter {
         camera.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 
         pauseMenu = new PauseMenu(game);
+        purchaseMenu = new PurchaseMenu(game, this);
     }
 
     @Override
@@ -132,9 +138,18 @@ public class MainScreen extends ScreenAdapter {
             pauseMenu.setInput();
             pauseOpened = true;
         } else if (!game.gameState.paused && pauseOpened) {
-            Gdx.input.setInputProcessor(stage);
+            Gdx.input.setInputProcessor(inputMultiplexer);
             pauseOpened = false;
         }
+
+        if (game.gameState.purchaseMenuOpen && !purchaseOpened) {
+            purchaseMenu.setInput();
+            purchaseOpened = true;
+        } else if (!game.gameState.purchaseMenuOpen && purchaseOpened) {
+            Gdx.input.setInputProcessor(inputMultiplexer);
+            purchaseOpened = false;
+        }
+
         game.batch.begin();
         stage.draw();
         game.batch.end();
@@ -159,6 +174,10 @@ public class MainScreen extends ScreenAdapter {
 
         if (game.gameState.paused) {
             this.pauseMenu.draw(delta);
+        }
+
+        if (game.gameState.purchaseMenuOpen) {
+            this.purchaseMenu.draw(delta);
         }
     }
 
@@ -190,6 +209,7 @@ public class MainScreen extends ScreenAdapter {
         world.dispose();
         b2dr.dispose();
         pauseMenu.dispose();
+        purchaseMenu.dispose();
         for (Colony colony : colonies) {
             colony.dispose();
         }
@@ -213,6 +233,9 @@ public class MainScreen extends ScreenAdapter {
     public void inputUpdate(float delta) {
         // do not process camera if paused
         if (game.gameState.paused) {
+            return;
+        }
+        if (game.gameState.purchaseMenuOpen) {
             return;
         }
 
@@ -258,6 +281,15 @@ public class MainScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.C) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.C)) {
             cameraInputProcessor.keyDown(Input.Keys.C);
             setCameraLock(false);
+            //set all colonies to unselected (since not focused anymore)
+            for (Colony c : colonies) {
+                c.setSelected(false);
+            }
+        }
+
+        //if p is pressed, purchase ant
+        if (Gdx.input.isKeyPressed(Input.Keys.P) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.P)) {
+            cameraInputProcessor.keyDown(Input.Keys.P);
         }
 
         //Player inputs
@@ -327,6 +359,10 @@ public class MainScreen extends ScreenAdapter {
     public void focusCameraOnAnt(Body ant) {
         player = ant;
         camera.position.set(ant.getPosition().x * PPM, ant.getPosition().y * PPM, 0);
+    }
+
+    public MapObjectHandler getMapObjectHandler() {
+        return moh;
     }
 
 }

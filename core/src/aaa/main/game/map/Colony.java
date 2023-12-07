@@ -38,6 +38,8 @@ public class Colony extends MapObject {
 
     private boolean playerOwned;
 
+    private boolean isSelected;
+
     private ArrayList<Ant> antList = new ArrayList<>();
 
     float x;
@@ -46,6 +48,7 @@ public class Colony extends MapObject {
     // Constructor
     public Colony(String name, boolean isPlayer, float cResources, float cHealth, int ants, float x, float y, OrthographicCamera cCamera, World world) {
         super(x, y, COLONY_WIDTH, COLONY_HEIGHT);
+        isSelected = false;
         playerOwned = isPlayer;
         cName = name;
         resources=cResources;
@@ -151,6 +154,10 @@ public class Colony extends MapObject {
     public boolean isPlayerOwned() {return playerOwned;}
 
     public ArrayList<Ant> getAntsList() {return antList;}
+
+    public void setSelected(boolean selected) {isSelected = selected;}
+
+    public boolean isSelected() {return isSelected;}
 
 
     //public Ant createAnt(float x, float y, String type) {}
