@@ -100,6 +100,8 @@ public final class Constants {
     public static final float FORAGE_START = 30f;
     public static final int FORAGE_SIZE = 4;
 
+    public static final float ANT_RES_MAX = 50f;
+    public static final float COL_RES_MAX = 100f;
 
 
     // map constants

@@ -11,6 +11,7 @@ public class AntBeeline implements Target {
 
     @Override
     public boolean isApplicable(MapObjectHandler moh, MapObject mobj) {
+
         return ;
     }
 
