@@ -204,4 +204,53 @@ public class ColonyUtils {
         return minSize / 3;
     }
 
+    public float getColonyResources(Colony colony, MainScreen screen) {
+        return colony.getResources();
+    }
+
+    //function for purchasing basic ant
+    public static void purchaseAnt(Colony colony, MainScreen screen) {
+        //check if colony has enough resources
+        System.out.println("Resources: " + colony.getResources());
+        if (colony.getResources() >= COST_PER_ANT) {
+            //subtract resources
+            colony.setResources(colony.getResources() - COST_PER_ANT);
+            //add ant
+            addAnt(colony, "basic", screen.camera, screen.world, screen.getMapObjectHandler());
+            System.out.println("Ant purchased");
+        } else {
+            System.out.println("Not enough resources");
+        }
+    }
+
+    //function for purchasing worker ant
+    public static void purchaseWorkerAnt(Colony colony, MainScreen screen) {
+        //check if colony has enough resources
+        System.out.println("Resources: " + colony.getResources());
+        if (colony.getResources() >= COST_PER_ANT) {
+            //subtract resources
+            colony.setResources(colony.getResources() - COST_PER_ANT);
+            //add ant
+            addAnt(colony, "Worker", screen.camera, screen.world, screen.getMapObjectHandler());
+            System.out.println("Ant purchased");
+        } else {
+            System.out.println("Not enough resources");
+        }
+    }
+
+    //function for purchasing solider ant
+    public static void purchaseSoldierAnt(Colony colony, MainScreen screen) {
+        //check if colony has enough resources
+        System.out.println("Resources: " + colony.getResources());
+        if (colony.getResources() >= COST_PER_ANT) {
+            //subtract resources
+            colony.setResources(colony.getResources() - COST_PER_ANT);
+            //add ant
+            addAnt(colony, "Soldier", screen.camera, screen.world, screen.getMapObjectHandler());
+            System.out.println("Ant purchased");
+        } else {
+            System.out.println("Not enough resources");
+        }
+    }
+
 }

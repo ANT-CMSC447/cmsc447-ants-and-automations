@@ -175,6 +175,8 @@ public class CameraInputProcessor implements InputProcessor {
                 screen.focusCameraOnColony(colony.getColonyBody());
                 setSelectedObject(colony.getColonyBody());
                 screen.setCameraLock(true);
+                System.out.println("Food: " + colony.getResources());
+                colony.setSelected(true);
             } else {
                 //System.out.println("Colony not found");
             }

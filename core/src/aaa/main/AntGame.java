@@ -19,6 +19,7 @@ public class AntGame extends Game {
 	public BitmapFont font;
 	public GameState gameState;
 	public TextButton.TextButtonStyle buttonStyle;
+	public TextButton.TextButtonStyle ExitbuttonStyle;
 	private PauseMenu pauseMenu;
 	@Override
 	public void create () {
@@ -29,7 +30,11 @@ public class AntGame extends Game {
 		font = new BitmapFont();
 		buttonStyle = new TextButton.TextButtonStyle();
 		buttonStyle.font = this.font;
-		buttonStyle.fontColor = Color.RED;
+		buttonStyle.fontColor = Color.WHITE;
+
+		ExitbuttonStyle = new TextButton.TextButtonStyle();
+		ExitbuttonStyle.font = this.font;
+		ExitbuttonStyle.fontColor = Color.RED;
 		// set the screen size properly
 		Gdx.graphics.setWindowedMode(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 		setScreen(new MenuScreen(this));
