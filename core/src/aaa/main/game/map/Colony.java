@@ -27,9 +27,9 @@ public class Colony extends MapObject {
 
     private int antsAlive;
 
-    private Texture texture;
+    private Texture texture, hTexture;
 
-    private Sprite sprite;
+    private Sprite sprite, hSprite;
 
     private Body colonyBody;
 
@@ -53,7 +53,9 @@ public class Colony extends MapObject {
         antsAlive=ants;
         colonyBody = RenderUtils.createBox(150,150,COLONY_WIDTH * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,COLONY_HEIGHT * TILE_CONVERSION_FACTOR * MAP_TILE_PIXELS,true, world);
         texture = new Texture(Gdx.files.internal(COLONY_TEXTURE_FILE));
+        hTexture = new Texture(Gdx.files.internal("colony_highlight.png"));
         sprite = new Sprite(texture);
+        hSprite = new Sprite(hTexture);
         camera = cCamera;
         this.world = world;
         this.x = x;
@@ -92,6 +94,10 @@ public class Colony extends MapObject {
 
     public String getName() {return cName;}
 
+    public void setPlayerOwned(boolean owned) {
+        playerOwned = owned;
+    }
+
     //Render method for drawing colony sprite
     public void render(SpriteBatch batch) {
          //first we position and rotate the sprite correctly
@@ -107,22 +113,23 @@ public class Colony extends MapObject {
         }
         colonyBody.setTransform(absPos, colonyBody.getAngle());
         Vector3 colonyPos = camera.project(new Vector3(actualPos.x, actualPos.y, 0));
-
         // Set sprite position and scale
+        hSprite.setPosition(colonyPos.x - sprite.getWidth() / 2, colonyPos.y - sprite.getHeight() / 2);
         sprite.setPosition(colonyPos.x - sprite.getWidth() / 2, colonyPos.y - sprite.getHeight() / 2);
-
         // was 32, testing 64
         int SCALE_FACTOR = MAP_TILE_PIXELS * COLONY_WIDTH * TILE_CONVERSION_FACTOR;
-
-
         sprite.setScale(2*(SCALE_FACTOR/sprite.getWidth()) / camera.zoom);
-
+        hSprite.setScale(2*(SCALE_FACTOR/sprite.getWidth()) / camera.zoom);
         // Set sprite rotation
         float rotation = (float) Math.toDegrees(colonyBody.getAngle());
         sprite.setRotation(rotation);
+        hSprite.setRotation(rotation);
 
         // Draw the sprite
         batch.begin();
+        if (playerOwned) {
+            hSprite.draw(batch);
+        }
         sprite.draw(batch);
         batch.end();
 
